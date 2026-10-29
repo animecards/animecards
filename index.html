@@ -4,398 +4,90 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <title>AnimeCards</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
-:root{
-  --bg:#090b10;
-  --panel:#11141d;
-  --panel-hover:#171b26;
-  --border:rgba(255,255,255,.08);
-  --text:#f1f5f9;
-  --muted:#94a3b8;
-  --accent:#6366f1;
-}
+:root{--bg:#090b10;--panel:#11141d;--border:rgba(255,255,255,.08);--text:#f1f5f9;--muted:#94a3b8}
 *{box-sizing:border-box}
-body{
-  background:var(--bg);
-  color:var(--text);
-  font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
-  min-height:100vh;
-  overflow-x:hidden;
-  -webkit-font-smoothing:antialiased;
-}
-.no-scrollbar::-webkit-scrollbar{display:none}
-.no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
-.glass{
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:12px;
-}
-header.glass{
-  background:rgba(9,11,16,.92);
-  backdrop-filter:blur(12px);
-  border-width:0 0 1px 0;
-  border-radius:0;
-}
-.btn{
-  background:#6366f1;
-  color:#fff;
-  font-weight:600;
-  font-size:.85rem;
-  padding:.5rem 1rem;
-  border-radius:8px;
-  transition:all .15s ease;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:.4rem;
-}
-.btn:hover{background:#4f46e5}
-.btn:disabled{opacity:.4;pointer-events:none}
-.btn2{
-  background:rgba(255,255,255,.03);
-  border:1px solid rgba(255,255,255,.1);
-  color:#cbd5e1;
-  padding:.4rem .75rem;
-  border-radius:8px;
-  font-size:.8rem;
-  font-weight:500;
-  transition:all .15s ease;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:.35rem;
-}
-.btn2:hover{
-  background:rgba(255,255,255,.08);
-  border-color:rgba(255,255,255,.22);
-  color:#fff;
-}
-input,select,textarea{
-  background:#090b10;
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:8px;
-  padding:.45rem .65rem;
-  color:var(--text);
-  max-width:100%;
-  font-size:.85rem;
-  transition:border-color .15s;
-}
-input:focus,select:focus,textarea:focus{
-  outline:none;
-  border-color:#6366f1;
-}
-.tab{
-  padding:.45rem .8rem;
-  border-radius:8px;
-  white-space:nowrap;
-  color:var(--muted);
-  font-weight:500;
-  font-size:.82rem;
-  transition:all .15s;
-  flex-shrink:0;
-  display:inline-flex;
-  align-items:center;
-  gap:.35rem;
-}
+body{background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4,.ttl{font-family:Orbitron,Inter,sans-serif;letter-spacing:.02em}
+.no-scrollbar::-webkit-scrollbar{display:none}.no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
+.glass{background:var(--panel);border:1px solid var(--border);border-radius:12px}
+header.glass{background:rgba(9,11,16,.92);backdrop-filter:blur(12px);border-width:0 0 1px 0;border-radius:0}
+.btn{background:#6366f1;color:#fff;font-weight:600;font-size:.85rem;padding:.5rem 1rem;border-radius:8px;transition:all .15s;display:inline-flex;align-items:center;justify-content:center;gap:.4rem}
+.btn:hover{background:#4f46e5}.btn:disabled{opacity:.4;pointer-events:none}
+.btn.gold{background:linear-gradient(90deg,#b45309,#f59e0b);color:#1c1003}.btn.gold:hover{filter:brightness(1.1)}
+.btn2{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);color:#cbd5e1;padding:.4rem .75rem;border-radius:8px;font-size:.8rem;font-weight:500;transition:all .15s;display:inline-flex;align-items:center;justify-content:center;gap:.35rem}
+.btn2:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.22);color:#fff}
+input,select,textarea{background:#090b10;border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:.45rem .65rem;color:var(--text);max-width:100%;font-size:.85rem;transition:border-color .15s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#6366f1}
+.tab{padding:.45rem .85rem;border-radius:8px;white-space:nowrap;color:var(--muted);font-weight:600;font-size:.8rem;transition:all .15s;flex-shrink:0;display:inline-flex;align-items:center;gap:.35rem;letter-spacing:.02em}
 .tab:hover{color:#fff;background:rgba(255,255,255,.04)}
 .tab.on{background:rgba(99,102,241,.16);color:#fff;border:1px solid rgba(99,102,241,.4)}
-
-/* Cartes & Raretés */
-.card{
-  position:relative;
-  aspect-ratio:2/3;
-  border-radius:10px;
-  border:2px solid var(--bc,#52525b);
-  overflow:hidden;
-  cursor:pointer;
-  background:#141720;
-  transform:perspective(800px) rotateX(var(--rx,0)) rotateY(var(--ry,0));
-  transition:transform .15s ease,box-shadow .2s ease;
-  user-select:none;
-}
-.art{
-  position:absolute;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:linear-gradient(160deg,hsl(var(--hue),22%,20%),#0e1017);
-}
-.art b{font-size:3rem;opacity:.25;font-weight:700}
-.art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.nm{
-  position:absolute;
-  left:0;
-  right:0;
-  bottom:0;
-  padding:.55rem .55rem .45rem;
-  background:linear-gradient(transparent,rgba(5,7,12,.92) 45%,#05070c);
-  font-size:.72rem;
-  font-weight:600;
-  line-height:1.15;
-}
-.nm small{
-  display:block;
-  font-weight:500;
-  color:#cbd5e1;
-  opacity:.85;
-  font-size:.62rem;
-  margin-top:2px;
-}
-.nm .cdesc{
-  display:-webkit-box;
-  -webkit-line-clamp:1;
-  -webkit-box-orient:vertical;
-  overflow:hidden;
-  font-size:.55rem;
-  color:#94a3b8;
-  font-weight:400;
-  margin-top:2px;
-}
-.rl{
-  position:absolute;
-  top:5px;
-  left:5px;
-  font-size:.56rem;
-  padding:1px 6px;
-  border-radius:99px;
-  background:rgba(9,11,16,.85);
-  border:1px solid rgba(255,255,255,.1);
-  color:var(--bc);
-  font-weight:700;
-  z-index:3;
-}
-.tp{
-  position:absolute;
-  top:23px;
-  left:5px;
-  font-size:.5rem;
-  padding:1px 5px;
-  border-radius:4px;
-  background:rgba(9,11,16,.85);
-  color:#cbd5e1;
-  font-weight:600;
-  letter-spacing:.03em;
-  z-index:3;
-}
-.tp.f{color:#a5b4fc}
-.cnt{
-  position:absolute;
-  top:6px;
-  right:6px;
-  z-index:6;
-  background:#090b10;
-  color:#fff;
-  font-weight:700;
-  font-size:.72rem;
-  border:1px solid rgba(255,255,255,.22);
-  border-radius:6px;
-  padding:1px 6px;
-}
-.shine{
-  position:absolute;
-  inset:0;
-  opacity:0;
-  pointer-events:none;
-  background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.25) 48%,transparent 65%);
-  background-size:250% 100%;
-  background-position:var(--mx,50%) 0;
-  mix-blend-mode:overlay;
-  transition:opacity .2s;
-  z-index:2;
-}
+.card{position:relative;aspect-ratio:2/3;border-radius:10px;border:2px solid var(--bc,#52525b);overflow:hidden;cursor:pointer;background:#141720;transform:perspective(800px) rotateX(var(--rx,0)) rotateY(var(--ry,0));transition:transform .15s ease,box-shadow .2s ease;user-select:none}
+.art{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(160deg,hsl(var(--hue),22%,20%),#0e1017)}
+.art b{font-size:3rem;opacity:.25;font-weight:700}.art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.nm{position:absolute;left:0;right:0;bottom:0;padding:.55rem .55rem .45rem;background:linear-gradient(transparent,rgba(5,7,12,.92) 45%,#05070c);font-size:.72rem;font-weight:600;line-height:1.15}
+.nm .cdesc{display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;font-size:.55rem;color:#94a3b8;font-weight:400;margin-top:2px}
+.nm .val{display:flex;align-items:center;gap:3px;margin-top:3px;font-size:.68rem;font-weight:700;color:#fcd34d}
+.rl{position:absolute;top:5px;left:5px;font-size:.56rem;padding:1px 6px;border-radius:99px;background:rgba(9,11,16,.85);border:1px solid rgba(255,255,255,.1);color:var(--bc);font-weight:700;z-index:3}
+.tp{position:absolute;top:23px;left:5px;font-size:.5rem;padding:1px 5px;border-radius:4px;background:rgba(9,11,16,.85);color:#cbd5e1;font-weight:700;letter-spacing:.03em;z-index:3}
+.tp.f{color:#a5b4fc}.tp.m{color:#6ee7b7}
+.cnt{position:absolute;top:6px;right:6px;z-index:6;background:#090b10;color:#fff;font-weight:700;font-size:.72rem;border:1px solid rgba(255,255,255,.22);border-radius:6px;padding:1px 6px}
+.shine{position:absolute;inset:0;opacity:0;pointer-events:none;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.25) 48%,transparent 65%);background-size:250% 100%;background-position:var(--mx,50%) 0;mix-blend-mode:overlay;transition:opacity .2s;z-index:2}
 .tilt:hover .shine{opacity:.55}
-.r-C{--bc:#71717a}
-.r-R{--bc:#3b82f6}
-.r-E{--bc:#a855f7;box-shadow:0 0 12px rgba(168,85,247,.18)}
-.r-L{--bc:#eab308;box-shadow:0 0 16px rgba(234,179,8,.28)}
-.r-L .shine{opacity:.35}
-.r-M{
-  --bc:#f472b6;
-  border-color:transparent;
-  box-shadow:0 0 20px rgba(236,72,153,.35);
-  background:linear-gradient(#141720,#141720) padding-box,linear-gradient(125deg,#f472b6,#60a5fa,#facc15,#34d399,#a78bfa,#f472b6) border-box;
-}
-.r-M .shine{
-  background:linear-gradient(115deg,#f472b6,#60a5fa,#facc15,#34d399,#a78bfa,#f472b6);
-  background-size:300%;
-  mix-blend-mode:color-dodge;
-  opacity:.45;
-}
-.back{
-  background:radial-gradient(circle at 50% 50%,#1e2436 0%,#0d1017 100%);
-  border-color:#334155;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:2.2rem;
-  color:#94a3b8;
-}
-.slab{
-  background:rgba(255,255,255,.03);
-  border:1px solid rgba(255,255,255,.16);
-  border-radius:10px;
-  padding:5px;
-}
-.slab .lab{
-  display:flex;
-  justify-content:space-between;
-  background:#f1f5f9;
-  color:#090b10;
-  border-radius:4px;
-  padding:2px 6px;
-  font-size:.6rem;
-  margin-bottom:4px;
-  font-weight:700;
-}
+.r-C{--bc:#71717a}.r-R{--bc:#3b82f6}.r-E{--bc:#a855f7;box-shadow:0 0 12px rgba(168,85,247,.18)}
+.r-L{--bc:#eab308;box-shadow:0 0 16px rgba(234,179,8,.28)}.r-L .shine{opacity:.35}
+.r-M{--bc:#f472b6;border-color:transparent;box-shadow:0 0 20px rgba(236,72,153,.35);background:linear-gradient(#141720,#141720) padding-box,linear-gradient(125deg,#f472b6,#60a5fa,#facc15,#34d399,#a78bfa,#f472b6) border-box}
+.r-M .shine{background:linear-gradient(115deg,#f472b6,#60a5fa,#facc15,#34d399,#a78bfa,#f472b6);background-size:300%;mix-blend-mode:color-dodge;opacity:.45}
+.back{background:radial-gradient(circle at 50% 50%,#1e2436 0%,#0d1017 100%);border-color:#334155;display:flex;align-items:center;justify-content:center;font-size:2.2rem;color:#94a3b8}
+.slab{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.16);border-radius:10px;padding:5px}
+.slab .lab{display:flex;justify-content:space-between;background:#f1f5f9;color:#090b10;border-radius:4px;padding:2px 6px;font-size:.6rem;margin-bottom:4px;font-weight:700}
 .sel{outline:2px solid #6366f1;outline-offset:2px;border-radius:12px}
-
-/* Design Booster Pack Sobre & Métallisé */
-.pack{
-  position:relative;
-  width:220px;
-  height:340px;
-  margin:auto;
-  border-radius:6px;
-  background:linear-gradient(135deg,#161b2e 0%,#0b0e18 45%,#121726 75%,#080a11 100%);
-  border:1px solid rgba(192,206,238,.25);
-  box-shadow:0 22px 48px rgba(0,0,0,.85),inset 0 0 24px rgba(139,92,246,.08);
-  cursor:pointer;
-  transition:transform .35s cubic-bezier(.2,1,.3,1),box-shadow .35s ease,opacity .45s ease;
-  overflow:hidden;
-  user-select:none;
-}
-.pack::before,.pack::after{
-  content:"";
-  position:absolute;
-  left:0;
-  right:0;
-  height:16px;
-  background:
-    repeating-linear-gradient(90deg,rgba(255,255,255,.12) 0,rgba(255,255,255,.12) 2px,rgba(0,0,0,.45) 2px,rgba(0,0,0,.45) 5px),
-    linear-gradient(180deg,#252d44,#0d111c);
-  z-index:4;
-}
-.pack::before{top:0;border-bottom:1px solid rgba(255,255,255,.18)}
-.pack::after{bottom:0;border-top:1px solid rgba(255,255,255,.18)}
-.pack:hover{
-  transform:translateY(-6px) scale(1.015);
-  border-color:rgba(196,181,253,.5);
-  box-shadow:0 28px 60px rgba(0,0,0,.92),0 0 28px rgba(139,92,246,.2);
-}
-.pack-foil{
-  position:absolute;
-  inset:0;
-  background:linear-gradient(115deg,transparent 25%,rgba(196,181,253,.14) 45%,rgba(103,232,249,.12) 52%,transparent 70%);
-  background-size:250% 100%;
-  transition:background-position .6s ease;
-  pointer-events:none;
-  z-index:3;
-}
+.pack{position:relative;width:220px;height:340px;margin:auto;border-radius:6px;background:linear-gradient(135deg,#161b2e 0%,#0b0e18 45%,#121726 75%,#080a11 100%);border:1px solid rgba(192,206,238,.25);box-shadow:0 22px 48px rgba(0,0,0,.85),inset 0 0 24px rgba(139,92,246,.08);cursor:pointer;transition:transform .35s cubic-bezier(.2,1,.3,1),box-shadow .35s ease,opacity .45s ease;overflow:hidden;user-select:none}
+.pack::before,.pack::after{content:"";position:absolute;left:0;right:0;height:16px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.12) 0,rgba(255,255,255,.12) 2px,rgba(0,0,0,.45) 2px,rgba(0,0,0,.45) 5px),linear-gradient(180deg,#252d44,#0d111c);z-index:4}
+.pack::before{top:0;border-bottom:1px solid rgba(255,255,255,.18)}.pack::after{bottom:0;border-top:1px solid rgba(255,255,255,.18)}
+.pack:hover{transform:translateY(-6px) scale(1.015);border-color:rgba(196,181,253,.5);box-shadow:0 28px 60px rgba(0,0,0,.92),0 0 28px rgba(139,92,246,.2)}
+.pack-foil{position:absolute;inset:0;background:linear-gradient(115deg,transparent 25%,rgba(196,181,253,.14) 45%,rgba(103,232,249,.12) 52%,transparent 70%);background-size:250% 100%;transition:background-position .6s ease;pointer-events:none;z-index:3}
 .pack:hover .pack-foil{background-position:100% 0}
-.pack.torn{
-  transform:translateY(-32px) rotate(5deg) scale(1.1);
-  opacity:0;
-}
-
-/* Animations d'ouverture & Rareté L/M */
+.pack.torn{transform:translateY(-32px) rotate(5deg) scale(1.1);opacity:0}
+.pack.gold{background:linear-gradient(135deg,#3a2a08 0%,#8a6414 30%,#f5d878 50%,#8a6414 70%,#3a2a08 100%);border-color:rgba(253,224,71,.75);box-shadow:0 22px 48px rgba(0,0,0,.8),0 0 40px rgba(250,204,21,.35);animation:goldPulse 2.4s ease-in-out infinite}
+.pack.gold .pack-foil{background:linear-gradient(115deg,transparent 25%,rgba(255,255,255,.4) 45%,transparent 65%);background-size:250% 100%}
+@keyframes goldPulse{50%{box-shadow:0 22px 48px rgba(0,0,0,.8),0 0 70px rgba(250,204,21,.65)}}
 @keyframes fl{from{opacity:0;transform:rotateY(85deg) scale(.88)}to{opacity:1;transform:rotateY(0) scale(1)}}
 @keyframes fR{50%{box-shadow:0 0 28px 4px rgba(59,130,246,.45)}}
 @keyframes fE{50%{box-shadow:0 0 42px 8px rgba(168,85,247,.5)}}
 @keyframes fL{0%,100%{box-shadow:0 0 35px 6px rgba(234,179,8,.5)}50%{box-shadow:0 0 95px 28px rgba(250,204,21,.85)}}
-@keyframes fM{
-  0%{box-shadow:0 0 60px 18px rgba(244,114,182,.75)}
-  33%{box-shadow:0 0 95px 30px rgba(96,165,250,.85)}
-  66%{box-shadow:0 0 95px 30px rgba(250,204,21,.85)}
-  100%{box-shadow:0 0 60px 18px rgba(52,211,153,.75)}
-}
-@keyframes shk{
-  15%{transform:translate(-8px,5px) rotate(-1deg)}
-  30%{transform:translate(8px,-5px) rotate(1deg)}
-  45%{transform:translate(-6px,-4px)}
-  60%{transform:translate(6px,4px)}
-  75%{transform:translate(-3px,2px)}
-}
+@keyframes fM{0%{box-shadow:0 0 60px 18px rgba(244,114,182,.75)}33%{box-shadow:0 0 95px 30px rgba(96,165,250,.85)}66%{box-shadow:0 0 95px 30px rgba(250,204,21,.85)}100%{box-shadow:0 0 60px 18px rgba(52,211,153,.75)}}
+@keyframes shk{15%{transform:translate(-8px,5px) rotate(-1deg)}30%{transform:translate(8px,-5px) rotate(1deg)}45%{transform:translate(-6px,-4px)}60%{transform:translate(6px,4px)}75%{transform:translate(-3px,2px)}}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes flashScreen{0%{opacity:.85}100%{opacity:0}}
-@keyframes partOut{
-  0%{transform:translate(0,0) scale(1);opacity:1}
-  100%{transform:translate(var(--tx),var(--ty)) scale(0);opacity:0}
-}
-.fx-C{animation:fl .32s ease-out}
-.fx-R{animation:fl .38s ease-out,fR 1s}
-.fx-E{animation:fl .45s ease-out,fE 1.2s}
-.fx-L{animation:fl .55s ease-out,fL 1.8s infinite}
-.fx-M{animation:fl .65s ease-out,fM 2.2s infinite}
+@keyframes partOut{0%{transform:translate(0,0) scale(1);opacity:1}100%{transform:translate(var(--tx),var(--ty)) scale(0);opacity:0}}
+.fx-C{animation:fl .32s ease-out}.fx-R{animation:fl .38s ease-out,fR 1s}.fx-E{animation:fl .45s ease-out,fE 1.2s}
+.fx-L{animation:fl .55s ease-out,fL 1.8s infinite}.fx-M{animation:fl .65s ease-out,fM 2.2s infinite}
 .shake{animation:shk .55s ease-in-out}
-.halo-L{
-  position:absolute;
-  inset:-28%;
-  background:conic-gradient(from 0deg,transparent,rgba(250,204,21,.45),transparent,rgba(245,158,11,.45),transparent);
-  filter:blur(32px);
-  animation:spin 4s linear infinite;
-  pointer-events:none;
-  z-index:0;
-}
-.halo-M{
-  position:absolute;
-  inset:-32%;
-  background:conic-gradient(#f472b6,#60a5fa,#facc15,#34d399,#a78bfa,#f472b6);
-  filter:blur(36px);
-  opacity:.65;
-  animation:spin 3s linear infinite;
-  pointer-events:none;
-  z-index:0;
-}
-.screen-flash{
-  position:fixed;
-  inset:0;
-  z-index:90;
-  pointer-events:none;
-  animation:flashScreen .85s ease-out forwards;
-}
-.ptc{
-  position:absolute;
-  left:50%;
-  top:50%;
-  width:7px;
-  height:7px;
-  border-radius:99px;
-  pointer-events:none;
-  z-index:20;
-  animation:partOut .95s cubic-bezier(.16,1,.3,1) forwards;
-}
-.scan{
-  position:absolute;
-  left:0;
-  right:0;
-  height:2px;
-  background:#818cf8;
-  box-shadow:0 0 12px #818cf8;
-  animation:sc 1s ease-in-out infinite alternate;
-  z-index:5;
-}
+.halo-L{position:absolute;inset:-28%;background:conic-gradient(from 0deg,transparent,rgba(250,204,21,.45),transparent,rgba(245,158,11,.45),transparent);filter:blur(32px);animation:spin 4s linear infinite;pointer-events:none;z-index:0}
+.halo-M{position:absolute;inset:-32%;background:conic-gradient(#f472b6,#60a5fa,#facc15,#34d399,#a78bfa,#f472b6);filter:blur(36px);opacity:.65;animation:spin 3s linear infinite;pointer-events:none;z-index:0}
+.screen-flash{position:fixed;inset:0;z-index:90;pointer-events:none;animation:flashScreen .85s ease-out forwards}
+.ptc{position:absolute;left:50%;top:50%;width:7px;height:7px;border-radius:99px;pointer-events:none;z-index:20;animation:partOut .95s cubic-bezier(.16,1,.3,1) forwards}
+.scan{position:absolute;left:0;right:0;height:2px;background:#818cf8;box-shadow:0 0 12px #818cf8;animation:sc 1s ease-in-out infinite alternate;z-index:5}
 @keyframes sc{from{top:0}to{top:100%}}
-.stats p{
-  display:flex;
-  justify-content:space-between;
-  border-bottom:1px solid rgba(255,255,255,.06);
-  padding:.42rem 0;
-}
+.stats p{display:flex;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.06);padding:.42rem 0}
+.scroll-y{max-height:9rem;overflow-y:auto;padding-right:.4rem}
+.scroll-y::-webkit-scrollbar{width:5px}.scroll-y::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:9px}
 </style>
 </head>
 <body>
-<div id="scr" class="fixed inset-0 z-[70] bg-[#090b10] flex items-center justify-center p-4 overflow-auto">
-  <p class="text-sm text-slate-400">Initialisation d'AnimeCards…</p>
-</div>
+<div id="scr" class="fixed inset-0 z-[70] bg-[#090b10] flex items-center justify-center p-4 overflow-auto"><p class="text-sm text-slate-400">Initialisation d'AnimeCards…</p></div>
 
 <div id="app" class="hidden min-h-screen flex flex-col">
   <header class="sticky top-0 z-30 glass px-3 sm:px-6 py-2.5">
     <div class="max-w-6xl mx-auto flex flex-col gap-2">
       <div class="flex items-center justify-between gap-2">
         <div class="flex items-center gap-2.5">
-          <h1 class="text-base sm:text-lg font-bold tracking-tight text-white">AnimeCards</h1>
+          <h1 class="text-base sm:text-lg font-bold text-white">ANIMECARDS</h1>
           <span id="bg-loader" class="hidden text-[11px] px-2 py-0.5 rounded-full bg-white/5 text-slate-400 border border-white/10"></span>
         </div>
         <div class="flex items-center gap-2">
@@ -403,22 +95,28 @@ input:focus,select:focus,textarea:focus{
           <div class="glass px-2.5 py-1 font-semibold text-amber-300 text-xs sm:text-sm whitespace-nowrap">🪙 <span id="ac">0</span> AC</div>
           <div class="relative">
             <button class="btn2 text-xs py-1 px-2" data-a="bell">🔔 <span id="bd" class="bg-indigo-500 text-white rounded-full px-1.5 text-[10px]"></span></button>
-            <div id="nt" class="hidden absolute right-0 mt-2 w-72 max-h-80 overflow-auto glass bg-[#11141d] p-2 text-xs space-y-1 shadow-2xl z-50"></div>
+            <div id="nt" class="hidden absolute right-0 mt-2 w-72 max-h-80 overflow-auto glass bg-[#11141d] p-1 text-xs shadow-2xl z-50"></div>
           </div>
           <button id="hd-av" class="flex items-center" data-a="go" data-p="prof" title="Mon Profil"></button>
         </div>
       </div>
-      <nav id="nav" class="flex items-center gap-1 overflow-x-auto no-scrollbar snap-x py-0.5 -mx-1 px-1"></nav>
+      <nav id="nav" class="flex items-center gap-1 overflow-x-auto no-scrollbar py-0.5 -mx-1 px-1"></nav>
     </div>
   </header>
   <main id="main" class="max-w-6xl w-full mx-auto p-3 sm:p-6 flex-1"></main>
 </div>
-
 <div id="ov" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-auto"></div>
 <div id="toast" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-[80] glass px-4 py-2 text-sm hidden bg-[#11141d] text-white shadow-xl border border-white/15"></div>
 
+<script>
+window.__ac=0;
+function acErr(m){var s=document.getElementById('scr');if(!s||window.__ac===2)return;s.classList.remove('hidden');s.innerHTML='<div style="max-width:30rem;padding:1.5rem;font-family:sans-serif;color:#fca5a5"><h2 style="font-size:1.2rem;font-weight:700;color:#fff">AnimeCards ne démarre pas</h2><p style="margin:.7rem 0;word-break:break-word">'+String(m).replace(/</g,'&lt;')+'</p><p style="color:#9ca3af">Vérifie que le fichier est complet (il se termine par &lt;/script&gt;&lt;/body&gt;&lt;/html&gt;) et ouvre-le dans Chrome, Edge ou Firefox.</p></div>'}
+window.addEventListener('error',function(e){acErr(e.message||'Erreur de script')});
+setTimeout(function(){if(!window.__ac)acErr('Le script principal ne s\'est pas lancé (erreur de syntaxe ou fichier tronqué).')},6000);
+</script>
 <script type="module">
-/* ============ 1. CONFIGURATION FIREBASE & INITIALISATION ============ */
+window.__ac=1;
+/* ============ 1. CONFIGURATION FIREBASE (aucune clé en clair : saisie via l'écran de configuration) ============ */
 const firebaseConfig = {
   apiKey: "AIzaSyAFQfRqYJlAB7vL0eJ3CSoSgo6QHVkgd1w",
   authDomain: "animecards-515d4.firebaseapp.com",
@@ -429,238 +127,227 @@ const firebaseConfig = {
   appId: "1:133699411799:web:874164627bcac0e6356812",
   measurementId: "G-RD7H63GRRE"
 };
-
-/* URL optionnelle si tu héberges ton fichier image de pack à côté d'index.html */
-const PACK_IMG_URL = "";
+const PACK_IMG_URL="";
 
 let initializeApp,getAuth,onAuthStateChanged,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,
     getFirestore,doc,getDoc,setDoc,updateDoc,addDoc,collection,query,where,orderBy,limit,onSnapshot,runTransaction,arrayUnion,arrayRemove,documentId,getDocs,writeBatch;
-
 async function loadFB(){
   const b='https://www.gstatic.com/firebasejs/10.12.2/';
-  const [a,au,fs]=await Promise.all([
-    import(b+'firebase-app.js'),
-    import(b+'firebase-auth.js'),
-    import(b+'firebase-firestore.js')
-  ]);
+  const [a,au,fs]=await Promise.all([import(b+'firebase-app.js'),import(b+'firebase-auth.js'),import(b+'firebase-firestore.js')]);
   ({initializeApp}=a);
   ({getAuth,onAuthStateChanged,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut}=au);
   ({getFirestore,doc,getDoc,setDoc,updateDoc,addDoc,collection,query,where,orderBy,limit,onSnapshot,runTransaction,arrayUnion,arrayRemove,documentId,getDocs,writeBatch}=fs);
 }
-
-const showErr=m=>{
-  const s=document.getElementById('scr');
-  s.classList.remove('hidden');
-  s.innerHTML=`<div class="glass p-6 max-w-md space-y-3 text-sm"><h2 class="text-lg font-bold text-white">Une erreur est survenue</h2><p class="text-rose-400 break-words">${String(m).replace(/</g,'&lt;')}</p><button class="btn w-full" onclick="location.reload()">Réessayer</button></div>`;
-};
+const showErr=m=>{const s=document.getElementById('scr');s.classList.remove('hidden');s.innerHTML=`<div class="glass p-6 max-w-md space-y-3 text-sm"><h2 class="text-lg font-bold text-white">Une erreur est survenue</h2><p class="text-rose-400 break-words">${String(m).replace(/</g,'&lt;')}</p><button class="btn w-full" onclick="location.reload()">Réessayer</button></div>`};
 window.addEventListener('error',e=>showErr(e.message));
 window.addEventListener('unhandledrejection',e=>showErr(e.reason?.message||e.reason));
 
-/* ============ 2. RARETÉS, PROBABILITÉS CACHÉES & CONSTANTES ============ */
-const R={
-  C:{n:'Commune',w:72,v:10,c:'#94a3b8'},
-  R:{n:'Rare',w:20,v:45,c:'#3b82f6'},
-  E:{n:'Épique',w:6,v:200,c:'#a855f7'},
-  L:{n:'Légendaire',w:1.7,v:1000,c:'#eab308'},
-  M:{n:'Mythique',w:0.3,v:5000,c:'#f472b6'}
-};
+/* ============ 2. CONSTANTES ============ */
+const R={C:{n:'Commune',v:10,c:'#94a3b8'},R:{n:'Rare',v:45,c:'#3b82f6'},E:{n:'Épique',v:200,c:'#a855f7'},L:{n:'Légendaire',v:1000,c:'#eab308'},M:{n:'Mythique',v:5000,c:'#f472b6'}};
 const RO=['C','R','E','L','M'];
+const W_STD={C:72,R:20,E:6,L:1.7,M:.3};          /* packs standards : taux d'origine */
+const W_WEL={C:0,R:72,E:20,L:6,M:2};             /* pack de bienvenue : décalage d'un cran */
 const GN=['','Poor','Fair','Good','VG','VG-EX','EX','EX-MT','NM','Mint','Gem Mint'];
 const GW=[0,6,8,12,14,16,16,12,8,5,3];
 const gm=g=>g>=10?15:g===9?5:g===8?2.2:g>=7?1.6:g>=5?1:.7;
-
 const E=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const $=s=>document.querySelector(s);
 const rnd=a=>a[Math.random()*a.length|0];
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const cl=o=>JSON.parse(JSON.stringify(o));
 const hue=s=>[...String(s)].reduce((a,c)=>a*31+c.charCodeAt(0),7)%360;
-const fmt=s=>{
-  s=Math.max(0,Math.floor(s));
-  const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;
-  return h>0?`${h}h ${String(m).padStart(2,'0')}m`:`${m}:${String(sec).padStart(2,'0')}`;
-};
-
+const fmt=s=>{s=Math.max(0,Math.floor(s));const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;return h>0?`${h}h ${String(m).padStart(2,'0')}m`:`${m}:${String(sec).padStart(2,'0')}`};
 const A={};
-let db,auth,uid=null,POOL=[],PM=new Map(),bgLoading=false;
-const S={
-  u:null,tab:'packs',socTab:'friends',notifs:[],auc:[],allAuc:[],trIn:[],trOut:[],
-  fr:{},clan:null,cmem:[],clans:[],chat:[],
-  F:{q:'',r:'',g:'',d:false,a:'',n:60},
-  GF:{q:'',r:'',s:'val'},G:null,
-  CQ:'',CR:'',CW:false,CN:60,
-  CLQ:'',cIcon:'⚔️',
-  T:{to:'',toName:'',my:{},th:{},mac:0,tac:0,tinv:null},
-  P:null,busy:false,avQ:''
-};
-const UN={};
-const sub=(k,fn)=>{UN[k]?.();UN[k]=fn};
+let db,auth,uid=null,POOL=[],PM=new Map(),bgLoading=false,BGMAP=new Map(),MK=new Map();
+const S={u:null,tab:'packs',socTab:'friends',aucTab:'live',notifs:[],auc:[],allAuc:[],trIn:[],trOut:[],fr:{},clan:null,cmem:[],clans:[],chat:[],
+  F:{q:'',r:'',g:'',d:false,a:'',n:60},GF:{q:'',r:'',s:'val'},G:null,CQ:'',CR:'',CW:false,CN:60,CLQ:'',cIcon:'⚔️',cPriv:'open',cForm:{name:'',tag:'',desc:''},
+  T:{to:'',toName:'',my:{},th:{},mac:0,tac:0,tinv:null},P:null,busy:false,avQ:''};
+const UN={};const sub=(k,fn)=>{UN[k]?.();UN[k]=fn};
 
-/* ============ 3. INDEXEDDB & CATALOGUE 5 000 CARTES (LAZY LOADING) ============ */
-const idb=()=>new Promise((res,rej)=>{
-  const r=indexedDB.open('animecards',1);
-  r.onupgradeneeded=()=>r.result.createObjectStore('cards',{keyPath:'id'});
-  r.onsuccess=()=>res(r.result);
-  r.onerror=()=>rej(r.error);
-});
-const idbAll=async()=>{
-  try{
-    const d=await idb();
-    return await new Promise((r,j)=>{
-      const q=d.transaction('cards').objectStore('cards').getAll();
-      q.onsuccess=()=>r(q.result||[]);
-      q.onerror=()=>j();
-    });
-  }catch(e){return []}
+/* ============ 3. EFFETS SONORES (Web Audio API native) ============ */
+const AU={c:null,
+  ctx(){if(localStorage.ac_mute==='1')return null;if(!this.c){try{this.c=new(window.AudioContext||window.webkitAudioContext)()}catch(e){return null}}if(this.c.state==='suspended')this.c.resume();return this.c},
+  noise(d,fa,fb,g,q){const c=this.ctx();if(!c)return;const n=Math.floor(c.sampleRate*d),b=c.createBuffer(1,n,c.sampleRate),o=b.getChannelData(0);for(let i=0;i<n;i++)o[i]=Math.random()*2-1;
+    const s=c.createBufferSource();s.buffer=b;const f=c.createBiquadFilter();f.type='bandpass';f.Q.value=q;f.frequency.setValueAtTime(fa,c.currentTime);f.frequency.exponentialRampToValueAtTime(fb,c.currentTime+d);
+    const gn=c.createGain();gn.gain.setValueAtTime(g,c.currentTime);gn.gain.exponentialRampToValueAtTime(.001,c.currentTime+d);s.connect(f);f.connect(gn);gn.connect(c.destination);s.start()},
+  tone(fr,t0,d,type,g){const c=this.ctx();if(!c)return;const o=c.createOscillator(),gn=c.createGain(),t=c.currentTime+t0;o.type=type;o.frequency.setValueAtTime(fr,t);
+    gn.gain.setValueAtTime(.0001,t);gn.gain.exponentialRampToValueAtTime(g,t+.02);gn.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(gn);gn.connect(c.destination);o.start(t);o.stop(t+d+.05)},
+  swoosh(){this.noise(.55,400,5200,.35,.8);this.noise(.3,2400,300,.2,2);for(let i=0;i<5;i++)setTimeout(()=>this.noise(.04,3000,1500,.18,4),60*i)},
+  flip(){this.noise(.07,2600,900,.25,3);this.tone(220,0,.08,'triangle',.07)},
+  jingle(){[523.25,659.25,783.99,1046.5,1318.5].forEach((f,i)=>{this.tone(f,i*.09,.55,'triangle',.13);this.tone(f*2,i*.09,.4,'sine',.05)});this.tone(2093,.5,.7,'sine',.06)}
 };
-const idbPut=async a=>{
-  try{
-    const d=await idb();
-    return await new Promise(r=>{
-      const t=d.transaction('cards','readwrite'),s=t.objectStore('cards');
-      a.forEach(x=>s.put(x));
-      t.oncomplete=r;
-      t.onerror=r;
-    });
-  }catch(e){}
-};
+document.addEventListener('click',()=>AU.ctx(),{once:true});
 
-function cleanDesc(raw,kind){
-  if(!raw)return kind==='c'?'Personnage emblématique issu du catalogue AniList.':'Œuvre majeure référencée dans le catalogue AniList.';
-  let s=String(raw)
-    .replace(/~!([\s\S]*?)!~/g,'')
-    .replace(/<[^>]+>/g,' ')
-    .replace(/__(.*?)__/g,'$1')
-    .replace(/\*\*(.*?)\*\*/g,'$1')
-    .replace(/\[([^\]]+)\]\([^\)]+\)/g,'$1')
-    .replace(/&(quot|amp|lt|gt|#039|rsquo|lsquo|ldquo|rdquo|ndash|mdash);/g,' ')
-    .replace(/\s+/g,' ')
-    .trim();
-  if(!s)return kind==='c'?'Personnage emblématique issu du catalogue AniList.':'Œuvre majeure référencée dans le catalogue AniList.';
-  return s.length>110?s.slice(0,108).trim()+'…':s;
+/* ============ 4. INDEXEDDB & CATALOGUE 10 000 CARTES ============ */
+const idb=()=>new Promise((res,rej)=>{const r=indexedDB.open('animecards2',1);r.onupgradeneeded=()=>r.result.createObjectStore('cards',{keyPath:'id'});r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});
+const idbAll=async()=>{try{const d=await idb();return await new Promise((r,j)=>{const q=d.transaction('cards').objectStore('cards').getAll();q.onsuccess=()=>r(q.result||[]);q.onerror=()=>j()})}catch(e){return []}};
+const idbPut=async a=>{try{const d=await idb();return await new Promise(r=>{const t=d.transaction('cards','readwrite'),s=t.objectStore('cards');a.forEach(x=>s.put(x));t.oncomplete=r;t.onerror=r})}catch(e){}};
+const idbClear=async()=>{try{const d=await idb();return await new Promise(r=>{const t=d.transaction('cards','readwrite');t.objectStore('cards').clear();t.oncomplete=r;t.onerror=r})}catch(e){}};
+
+const GENRE_FR={Action:'Action',Adventure:'Aventure',Comedy:'Comédie',Drama:'Drame',Ecchi:'Ecchi',Fantasy:'Fantastique',Horror:'Horreur','Mahou Shoujo':'Magical girl',Mecha:'Mécha',Music:'Musique',Mystery:'Mystère',Psychological:'Psychologique',Romance:'Romance','Sci-Fi':'Science-fiction','Slice of Life':'Tranche de vie',Sports:'Sport',Supernatural:'Surnaturel',Thriller:'Thriller'};
+const FMT_FR={TV:'série TV',TV_SHORT:'court-métrage TV',MOVIE:'film',SPECIAL:'épisode spécial',OVA:'OVA',ONA:'ONA',MUSIC:'clip musical',MANGA:'manga',NOVEL:'light novel',ONE_SHOT:'one-shot'};
+const ST_FR={FINISHED:'terminée',RELEASING:'toujours en cours',NOT_YET_RELEASED:'à venir',CANCELLED:'annulée',HIATUS:'en pause'};
+const gfr=a=>(a||[]).slice(0,4).map(g=>GENRE_FR[g]||g).join(', ');
+const nf=n=>(n||0).toLocaleString('fr-FR');
+function descChar(x){
+  const e=x.media?.edges?.[0],n=e?.node,t=n?(n.title.english||n.title.romaji):null;
+  const g=x.gender==='Female'?'f':x.gender==='Male'?'m':'';
+  const pr=g==='f'?'elle':g==='m'?'il':'il ou elle';
+  const role=e?.characterRole==='MAIN'?'un rôle principal':e?.characterRole==='SUPPORTING'?'un rôle secondaire':'une apparition';
+  let s=`${x.name.full} est un personnage ${g==='f'?'féminin':g==='m'?'masculin':'singulier'} ${t?`issu de « ${t} »${n.format?' ('+(FMT_FR[n.format]||'œuvre')+(n.seasonYear?', '+n.seasonYear:'')+')':''}, où ${pr} tient ${role}.`:'issu de l\'animation et du manga japonais.'}`;
+  if(x.age)s+=` Âge indiqué : ${x.age}.`;
+  if(n?.genres?.length)s+=` L'œuvre appartient aux genres ${gfr(n.genres)}.`;
+  return s+` Ce personnage est adoré par ${nf(x.favourites)} fans sur AniList.`;
 }
-
+function descMedia(x,k){
+  const t=x.title.english||x.title.romaji,isM=k==='n',yr=x.startDate?.year||x.seasonYear,st=x.studios?.nodes?.[0]?.name;
+  let s=`« ${t} » est ${isM?'un manga':'une œuvre d\'animation'}${x.format?' de type '+(FMT_FR[x.format]||x.format):''}${yr?', débuté en '+yr:''}.`;
+  if(!isM&&st)s+=` Elle a été produite par le studio ${st}.`;
+  if(!isM&&x.episodes)s+=` Elle compte ${x.episodes} épisode${x.episodes>1?'s':''}.`;
+  if(isM&&x.chapters)s+=` Il compte ${x.chapters} chapitres.`;
+  if(x.genres?.length)s+=` Genres : ${gfr(x.genres)}.`;
+  if(x.averageScore)s+=` Note moyenne du public : ${x.averageScore}/100.`;
+  if(x.status)s+=` Statut : ${ST_FR[x.status]||'inconnu'}.`;
+  return s+` Elle figure dans les favoris de ${nf(x.favourites)} utilisateurs d'AniList.`;
+}
 async function gql(q,v){
   for(let i=0;i<5;i++){
-    const r=await fetch('https://graphql.anilist.co',{
-      method:'POST',
-      headers:{'Content-Type':'application/json',Accept:'application/json'},
-      body:JSON.stringify({query:q,variables:v})
-    });
-    if(r.status===429){
-      const wait=(+r.headers.get('retry-after')||15)*1000+1000;
-      await sleep(wait);
-      continue;
-    }
+    const r=await fetch('https://graphql.anilist.co',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({query:q,variables:v})});
+    if(r.status===429){await sleep((+r.headers.get('retry-after')||20)*1000+1000);continue}
     if(!r.ok)throw new Error('AniList HTTP '+r.status);
     return (await r.json()).data.Page;
   }
   throw new Error('Limite de requêtes AniList atteinte');
 }
-
-const QC='query($p:Int){Page(page:$p,perPage:50){characters(sort:FAVOURITES_DESC){id name{full} image{large} favourites description(asHtml:false)}}}';
-const QM='query($p:Int,$t:MediaType,$a:Boolean){Page(page:$p,perPage:50){media(type:$t,sort:FAVOURITES_DESC,isAdult:$a){id title{romaji english} coverImage{extraLarge} favourites description(asHtml:false)}}}';
-
+const QC='query($p:Int){Page(page:$p,perPage:50){characters(sort:FAVOURITES_DESC){id name{full} gender age image{large} favourites media(perPage:1,sort:POPULARITY_DESC){edges{characterRole node{title{romaji english} seasonYear format genres}}}}}}';
+const QM='query($p:Int,$t:MediaType,$a:Boolean){Page(page:$p,perPage:50){media(type:$t,sort:FAVOURITES_DESC,isAdult:$a){id idMal title{romaji english} coverImage{extraLarge} favourites format episodes chapters seasonYear startDate{year} genres averageScore status studios(isMain:true){nodes{name}}}}}';
+const qrar=q=>q<.005?'M':q<.03?'L':q<.13?'E':q<.40?'R':'C';
+const PLAN={c:4500,f:5000,m:500,x:300};
 async function fetchJob(job){
-  const [k,p,a]=[job[0],+job.slice(1).replace('x',''),job.endsWith('x')];
+  const k=job[0],p=+job.slice(1).replace('x',''),a=job.endsWith('x');
   if(k==='c'){
     const d=await gql(QC,{p});
-    return (d.characters||[]).map(x=>({
-      id:'c'+x.id,kind:'c',name:x.name.full,img:x.image?.large||'',
-      fav:x.favourites||0,desc:cleanDesc(x.description,'c'),job,adult:false
-    }));
+    return (d.characters||[]).map((x,i)=>{const rk=(p-1)*50+i;return{id:'c'+x.id,kind:'c',name:x.name.full,img:x.image?.large||'',fav:x.favourites||0,desc:descChar(x),job,adult:false,rk,rar:qrar(rk/PLAN.c)}});
   }
   const d=await gql(QM,{p,t:k==='a'?'ANIME':'MANGA',a});
-  return (d.media||[]).map(x=>({
-    id:k+x.id,kind:k,name:x.title.english||x.title.romaji,img:x.coverImage?.extraLarge||'',
-    fav:x.favourites||0,desc:cleanDesc(x.description,k),job,adult:a
-  }));
-}
-
-function assignPyramid(list){
-  list.sort((a,b)=>(b.fav||0)-(a.fav||0));
-  const n=list.length||1;
-  list.forEach((x,i)=>{
-    const q=i/n;
-    x.rar=q<.005?'M':q<.03?'L':q<.13?'E':q<.40?'R':'C';
-    if(!x.desc)x.desc=cleanDesc('',x.kind);
+  return (d.media||[]).map((x,i)=>{
+    const rk=(p-1)*50+i,g=a?rk:rk*2+(k==='n'?1:0);
+    return{id:k+x.id,kind:k,name:x.title.english||x.title.romaji,img:x.coverImage?.extraLarge||'',fav:x.favourites||0,desc:descMedia(x,k),year:x.startDate?.year||x.seasonYear||0,mal:x.idMal||0,job,adult:a,rk,rar:qrar(g/(a?PLAN.x:PLAN.f))};
   });
 }
+/* Rareté de base : personnages et franchises = rang absolu (voir fetchJob) ; musiques = rang trié des animes parents */
+const grp=x=>x.adult?'x':x.kind==='c'?'c':(x.kind==='o'||x.kind==='e')?'m':'f';
 function rarify(all){
-  assignPyramid(all.filter(x=>x.kind==='c'&&!x.adult));
-  assignPyramid(all.filter(x=>x.kind!=='c'&&!x.adult));
-  assignPyramid(all.filter(x=>x.adult));
+  all.filter(x=>x.kind==='o'||x.kind==='e').sort((a,b)=>(b.fav||0)-(a.fav||0)||String(a.id).localeCompare(String(b.id))).forEach((x,i)=>{x.rar=qrar(i/PLAN.m)});
 }
-const reg=all=>{
-  POOL=all.filter(x=>x.rar);
-  PM=new Map(POOL.map(x=>[x.id,x]));
-};
-
-const JOBS=[];
-for(let i=1;i<=20;i++){
-  JOBS.push('c'+((i-1)*3+1),'c'+((i-1)*3+2),'c'+((i-1)*3+3),'a'+i,'n'+i);
-}
-const ADJ=['a1x','a2x'];
+const reg=all=>{POOL=all.filter(x=>x.rar);PM=new Map(POOL.map(x=>[x.id,x]))};
+const JOBS=['c1','a1','n1','c40','a25','n25','c2','c5','a3','c15','a10'];
+for(let i=1;i<=90;i++){for(const j of ['c'+i].concat(i<=50?['a'+i,'n'+i]:[]))if(!JOBS.includes(j))JOBS.push(j)}
+const ADJ=['a1x','a2x','a3x'];
+const FALLBACK=['Lelouch Lamperouge','Levi Ackerman','Light Yagami','Monkey D. Luffy','Naruto Uzumaki','Son Goku','Saitama','Edward Elric','Killua Zoldyck','Zero Two','Death Note','Fullmetal Alchemist: Brotherhood','Attack on Titan','Steins;Gate','One Piece','Cowboy Bebop','Demon Slayer','Hunter x Hunter','Berserk','Vagabond'].map((n,i)=>({id:'f'+i,kind:i<10?'c':'a',rar:i<2?'M':i<5?'L':i<10?'E':'R',name:n,img:'',fav:100000-i*4000,desc:`${n} fait partie des références de la culture manga et animation. Le catalogue complet se charge dès que la connexion à AniList est disponible.`,job:'fb',adult:false}));
 
 function updateBgBadge(){
-  const el=$('#bg-loader');
-  if(!el)return;
-  if(bgLoading&&POOL.length<5000){
-    el.classList.remove('hidden');
-    el.textContent=`Catalogue : ${POOL.length.toLocaleString()} / 5 000`;
-  }else{
-    el.classList.add('hidden');
+  const el=$('#bg-loader');if(!el)return;
+  if(bgLoading){el.classList.remove('hidden');el.textContent=`Catalogue : ${POOL.length.toLocaleString('fr-FR')} / 10 000`}
+  else el.classList.add('hidden');
+}
+function refresh(){
+  const cur=[...BGMAP.values()];rarify(cur);reg(cur);updateBgBadge();
+  if(S.tab==='codex'&&!document.activeElement?.matches?.('input,select'))fillCodex();
+}
+async function jikan(path){
+  for(let i=0;i<3;i++){
+    const r=await fetch('https://api.jikan.moe/v4/'+path);
+    if(r.status===429){await sleep(4000);continue}
+    if(!r.ok)throw new Error('Jikan HTTP '+r.status);
+    return (await r.json()).data;
+  }
+  throw new Error('Jikan indisponible');
+}
+function parseTheme(s){
+  s=String(s).replace(/^\s*#?\d+\s*:\s*/,'');
+  const m=s.match(/^"(.+?)"(?:\s+by\s+(.+?))?(?:\s*\((?:eps?|ep)[^)]*\))?\s*$/i);
+  if(!m)return null;
+  const jp=/\s*\([^)]*[\u3000-\u9fff\uff00-\uffef][^)]*\)/g;
+  const name=m[1].replace(jp,'').trim(),by=(m[2]||'').replace(jp,'').trim();
+  return name?{name,by}:null;
+}
+/* Sous-catalogue musical : openings / endings réels (Jikan) rattachés aux animes les plus aimés */
+async function musicLoop(done){
+  for(let w=0;w<40&&[...BGMAP.values()].filter(x=>x.kind==='a'&&x.mal).length<140;w++)await sleep(2000);
+  const src=[...BGMAP.values()].filter(x=>x.kind==='a'&&x.mal&&!x.adult).sort((a,b)=>b.fav-a.fav).slice(0,150);
+  let count=[...BGMAP.values()].filter(x=>x.kind==='o'||x.kind==='e').length;
+  for(const a of src){
+    if(count>=500)break;
+    if(done.has('mu'+a.mal))continue;
+    try{
+      const d=await jikan(`anime/${a.mal}/themes`),rows=[];
+      const add=(arr,kind,lim)=>(arr||[]).slice(0,lim).forEach((s,i)=>{
+        const p=parseTheme(s);if(!p)return;
+        rows.push({id:kind+a.mal+'_'+i,kind,name:p.name,by:p.by,img:a.img,fav:a.fav,job:'mu'+a.mal,adult:false,
+          desc:`« ${p.name} » est l'${kind==='o'?'opening':'ending'} n°${i+1} de « ${a.name} »${a.year?' ('+a.year+')':''}${p.by?`, interprété par ${p.by}`:''}. Cette musique d'anime ${kind==='o'?'ouvre':'clôture'} les épisodes de l'œuvre, adorée par ${nf(a.fav)} fans sur AniList.`});
+      });
+      add(d.openings,'o',3);add(d.endings,'e',2);
+      rows.forEach(r=>BGMAP.set(r.id,r));count+=rows.length;
+      refresh();await idbPut(rows);
+    }catch(e){await sleep(5000)}
+    await sleep(1300);
   }
 }
-
-async function startBackgroundLazyLoader(all){
+async function bgLoad(all){
   if(bgLoading)return;
   bgLoading=true;
-  const map=new Map(all.map(x=>[x.id,x]));
-  const done=new Set(all.map(x=>x.job));
+  BGMAP=new Map(all.filter(x=>x.job!=='fb').map(x=>[x.id,x]));
+  const done=new Set([...BGMAP.values()].map(x=>x.job));
   const todo=JOBS.filter(j=>!done.has(j));
   updateBgBadge();
-  for(let i=0;i<todo.length;i++){
-    try{
-      const rows=await fetchJob(todo[i]);
-      rows.forEach(r=>map.set(r.id,r));
-      const cur=[...map.values()];
-      rarify(cur);
-      reg(cur);
-      await idbPut(rows);
-      updateBgBadge();
-      if(S.tab==='codex'&&!document.activeElement?.matches?.('input,select'))fillCodex();
-    }catch(e){
-      await sleep(3000);
+  musicLoop(done).catch(()=>{});
+  for(const j of todo){
+    for(let t=0;t<2;t++){
+      try{const rows=await fetchJob(j);rows.forEach(r=>BGMAP.set(r.id,r));refresh();await idbPut(rows);break}
+      catch(e){await sleep(4000)}
     }
     await sleep(1400);
   }
-  const finalAll=[...map.values()];
-  rarify(finalAll);
-  reg(finalAll);
-  await idbPut(finalAll);
-  bgLoading=false;
-  updateBgBadge();
+  refresh();
+  await idbPut([...BGMAP.values()]);
+  bgLoading=false;updateBgBadge();
 }
 
-/* ============ 4. LOGIQUE DES CARTES, AVATARS & INVENTAIRE ============ */
+/* ============ 5. CARTES : RARETÉ DE BASE / RARETÉ DYNAMIQUE DU MARCHÉ / PRIX DE REVENTE ============ */
+const KL={c:'Personnage',a:'Anime',n:'Manga',o:'Opening',e:'Ending'};
+const TP={c:['PERSONNAGE',''],a:['FRANCHISE','f'],n:['FRANCHISE','f'],o:['OPENING','m'],e:['ENDING','m']};
 const cd=id=>PM.get(id)||{id,name:'Carte #'+id,img:'',rar:'C',kind:'c',fav:0,desc:'Carte du catalogue AnimeCards.'};
+/* Prix de revente : calculé UNIQUEMENT sur la rareté de base (anti-manipulation du marché) */
 const val=(id,g)=>Math.round(R[cd(id).rar].v*(g?gm(g):1));
 const sellP=(id,g)=>Math.max(1,Math.round(val(id,g)*.3));
-
-/* La valeur affichée sur la carte correspond exactement au prix de revente directe au jeu (sellP) */
+/* Rareté dynamique : fluctue selon volume et prix moyen des ventes réelles (affichage uniquement) */
+function buildMarket(){
+  const m=new Map(),pairs=new Map();
+  (S.allAuc||[]).forEach(a=>{
+    if(a.status!=='closed'||!a.bidder)return;
+    const pk=a.card+'|'+a.seller+'|'+a.bidder,n=(pairs.get(pk)||0)+1;
+    pairs.set(pk,n);if(n>2)return;
+    const o=m.get(a.card)||{n:0,sum:0};
+    o.n++;o.sum+=(+a.bid||0)/(a.grade?gm(a.grade):1);
+    m.set(a.card,o);
+  });
+  MK=m;
+}
+function er(c){
+  const o=MK.get(c.id);
+  if(!o||o.n<3)return c.rar;
+  const ratio=(o.sum/o.n)/R[c.rar].v,pr=ratio*(1+Math.min(o.n,10)/10);
+  let i=RO.indexOf(c.rar);
+  if(pr>=6)i+=2;else if(pr>=3)i+=1;else if(ratio<.4)i-=1;
+  return RO[Math.max(0,Math.min(4,i))];
+}
 function card(c,g=0){
-  const d=c.desc||cleanDesc('',c.kind);
-  return `<div class="card tilt r-${c.rar}" style="--hue:${hue(c.id)}" title="${E(c.name)} — ${E(d)}">
-    <div class="art"><b>${E(c.name?.[0]||'?')}</b>${c.img?`<img src="${E(c.img)}" referrerpolicy="no-referrer" loading="lazy" onerror="this.remove()">`:''}</div>
-    <div class="shine"></div>
-    <span class="rl">${R[c.rar].n}</span>
-    <span class="tp ${c.kind==='c'?'':'f'}">${c.kind==='c'?'PERSONNAGE':'FRANCHISE'}</span>
-    <div class="nm">
-      <div class="truncate">${E(c.name)}</div>
-      <div class="cdesc">${E(d)}</div>
-      <small>${sellP(c.id,g).toLocaleString()} AC</small>
-    </div>
+  const d=c.desc||'Carte du catalogue AnimeCards.',r=er(c),arrow=r!==c.rar?(RO.indexOf(r)>RO.indexOf(c.rar)?' ▲':' ▼'):'',tp=TP[c.kind]||TP.c;
+  return `<div class="card tilt r-${r}" style="--hue:${hue(c.id)}" title="${E(c.name)}">
+    <div class="art"><b>${E((c.name||'?')[0])}</b>${c.img?`<img src="${E(c.img)}" referrerpolicy="no-referrer" loading="lazy" onerror="this.remove()">`:''}</div>
+    <div class="shine"></div><span class="rl">${R[r].n}${arrow}</span><span class="tp ${tp[1]}">${tp[0]}</span>
+    <div class="nm"><div class="truncate">${E(c.name)}</div><div class="cdesc">${E(d)}</div><div class="val">🪙 ${sellP(c.id,g).toLocaleString()} AC</div></div>
   </div>`;
 }
 const slab=(c,g=0)=>g?`<div class="slab"><div class="lab"><span>PSA · ANIMECARDS</span><b>${g} ${GN[g]}</b></div>${card(c,g)}</div>`:card(c,0);
@@ -668,1655 +355,765 @@ const tile=(s,act,sel)=>`<div class="relative ${sel?'sel':''}" data-a="${act}" d
 
 const cnt=(inv,id,g)=>g?(inv?.[id]?.g||[]).filter(x=>x===g).length:(inv?.[id]?.q||0);
 const cntTotal=(inv,id)=>(inv?.[id]?.q||0)+((inv?.[id]?.g||[]).length);
-const addC=(inv,id,g,n=1)=>{
-  const o=inv[id]||(inv[id]={q:0,g:[]});
-  if(!Array.isArray(o.g))o.g=[];
-  if(typeof o.q!=='number')o.q=0;
-  if(g)for(let i=0;i<n;i++)o.g.push(g);
-  else o.q+=n;
-};
-const subC=(inv,id,g,n=1)=>{
-  const o=inv?.[id];
-  if(!o||cnt(inv,id,g)<n)return false;
-  if(g){for(let i=0;i<n;i++)o.g.splice(o.g.indexOf(g),1)}
-  else o.q-=n;
-  if(!o.q&&(!o.g||!o.g.length))delete inv[id];
-  return true;
-};
-const stacks=inv=>{
-  const r=[];
-  for(const id in inv||{}){
-    if(inv[id]?.q)r.push({id,g:0,n:inv[id].q});
-    const m={};
-    (inv[id]?.g||[]).forEach(x=>m[x]=(m[x]||0)+1);
-    for(const g in m)r.push({id,g:+g,n:m[g]});
-  }
-  return r;
-};
+const addC=(inv,id,g,n=1)=>{const o=inv[id]||(inv[id]={q:0,g:[]});if(!Array.isArray(o.g))o.g=[];if(typeof o.q!=='number')o.q=0;if(g)for(let i=0;i<n;i++)o.g.push(g);else o.q+=n};
+const subC=(inv,id,g,n=1)=>{const o=inv?.[id];if(!o||cnt(inv,id,g)<n)return false;if(g){for(let i=0;i<n;i++)o.g.splice(o.g.indexOf(g),1)}else o.q-=n;if(!o.q&&(!o.g||!o.g.length))delete inv[id];return true};
+const stacks=inv=>{const r=[];for(const id in inv||{}){if(inv[id]?.q)r.push({id,g:0,n:inv[id].q});const m={};(inv[id]?.g||[]).forEach(x=>m[x]=(m[x]||0)+1);for(const g in m)r.push({id,g:+g,n:m[g]})}return r};
 const invVal=inv=>stacks(inv).reduce((a,s)=>a+sellP(s.id,s.g)*s.n,0);
 
 const U=()=>S.u||{};
 const ME=()=>doc(db,'users',uid);
 const saveU=p=>updateDoc(ME(),p);
 const saveInv=(inv,x={})=>saveU({inv,val:invVal(inv),...x});
-const notif=(to,t)=>addDoc(collection(db,'users',to,'notifs'),{t,ts:Date.now(),read:false}).catch(()=>{});
-const toast=t=>{
-  const e=$('#toast');
-  e.textContent=t;
-  e.classList.remove('hidden');
-  clearTimeout(toast.t);
-  toast.t=setTimeout(()=>e.classList.add('hidden'),3200);
-};
+const notif=(to,t,type='info')=>addDoc(collection(db,'users',to,'notifs'),{t,type,ts:Date.now(),read:false}).catch(()=>{});
+const toast=t=>{const e=$('#toast');e.textContent=t;e.classList.remove('hidden');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.add('hidden'),3200)};
 const fail=e=>toast(typeof e==='string'?e:e?.message||'Erreur');
-
 function avatarHTML(u,sz='w-8 h-8 text-sm'){
   const img=u?.avImg||(u?.avCard&&cd(u.avCard)?.img)||'';
-  if(img){
-    return `<img src="${E(img)}" referrerpolicy="no-referrer" class="${sz} rounded-full object-cover border border-indigo-400/50 shrink-0 bg-slate-900" onerror="this.outerHTML='<span class=\\'${sz} rounded-full bg-slate-800 border border-white/10 inline-flex items-center justify-center shrink-0\\'>🦊</span>'">`;
-  }
+  if(img)return `<img src="${E(img)}" referrerpolicy="no-referrer" class="${sz} rounded-full object-cover border border-indigo-400/50 shrink-0 bg-slate-900" onerror="this.style.display='none'">`;
   return `<span class="${sz} rounded-full bg-slate-800 border border-white/10 inline-flex items-center justify-center shrink-0">${E(u?.av||'🦊')}</span>`;
 }
-
-const roll=()=>{
-  let r=Math.random()*100;
-  for(const k of RO){if((r-=R[k].w)<0)return k}
-  return 'C';
-};
+const roll=w=>{let r=Math.random()*100;for(const k of RO){if((r-=w[k])<0)return k}return'M'};
 const avail=()=>POOL.filter(p=>U().nsfw||!p.adult);
-function draw(){
-  const a=avail(),r=roll();
-  let c=a.filter(p=>p.rar===r);
+function draw(w){
+  const a=avail();let r=roll(w),c=a.filter(p=>p.rar===r);
+  for(let i=RO.indexOf(r)+1;!c.length&&i<5;i++)c=a.filter(p=>p.rar===RO[i]);
   if(!c.length)c=a;
   return rnd(c).id;
 }
 const online=f=>Date.now()-(f?.seen||0)<15e4;
 
-/* Événements globaux */
-document.addEventListener('mousemove',e=>{
-  const t=e.target.closest?.('.tilt');
-  if(!t)return;
-  const b=t.getBoundingClientRect(),x=(e.clientX-b.left)/b.width,y=(e.clientY-b.top)/b.height;
-  t.style.setProperty('--rx',(.5-y)*10+'deg');
-  t.style.setProperty('--ry',(x-.5)*10+'deg');
-  t.style.setProperty('--mx',x*100+'%');
-});
-document.addEventListener('mouseout',e=>{
-  const t=e.target.closest?.('.tilt');
-  if(t&&!t.contains(e.relatedTarget)){
-    t.style.setProperty('--rx','0deg');
-    t.style.setProperty('--ry','0deg');
-  }
-});
-document.addEventListener('click',e=>{
-  const t=e.target.closest('[data-a]');
-  if(t){e.preventDefault();A[t.dataset.a]?.(t.dataset.p,t)}
-});
-document.addEventListener('change',e=>{
-  const t=e.target.closest('[data-c]');
-  if(t)A[t.dataset.c]?.(t.value,t);
-});
-document.addEventListener('input',e=>{
-  const t=e.target.closest('[data-i]');
-  if(t)A[t.dataset.i]?.(t.value,t);
-});
+document.addEventListener('mousemove',e=>{const t=e.target.closest?.('.tilt');if(!t)return;const b=t.getBoundingClientRect(),x=(e.clientX-b.left)/b.width,y=(e.clientY-b.top)/b.height;t.style.setProperty('--rx',(.5-y)*10+'deg');t.style.setProperty('--ry',(x-.5)*10+'deg');t.style.setProperty('--mx',x*100+'%')});
+document.addEventListener('mouseout',e=>{const t=e.target.closest?.('.tilt');if(t&&!t.contains(e.relatedTarget)){t.style.setProperty('--rx','0deg');t.style.setProperty('--ry','0deg')}});
+document.addEventListener('click',e=>{const t=e.target.closest('[data-a]');if(t){e.preventDefault();A[t.dataset.a]?.(t.dataset.p,t)}});
+document.addEventListener('change',e=>{const t=e.target.closest('[data-c]');if(t)A[t.dataset.c]?.(t.value,t)});
+document.addEventListener('input',e=>{const t=e.target.closest('[data-i]');if(t)A[t.dataset.i]?.(t.value,t)});
 
-/* ============ 5. AUTHENTIFICATION & DÉMARRAGE RAPIDE ============ */
+/* ============ 6. ÉCRANS : CONFIGURATION, CONNEXION & DÉMARRAGE ============ */
 const scr=h=>{const s=$('#scr');s.innerHTML=h;s.classList.remove('hidden')};
 const hideScr=()=>$('#scr').classList.add('hidden');
-const getCfg=()=>{
-  if(firebaseConfig.apiKey)return firebaseConfig;
-  try{const l=JSON.parse(localStorage.ac_fbcfg||'null');if(l?.apiKey)return l}catch{}
-  return null;
-};
-
-const authScr=()=>scr(`<div class="glass p-6 max-w-sm w-full space-y-4">
-  <div class="text-center space-y-1">
-    <h2 class="text-2xl font-bold tracking-tight text-white">AnimeCards</h2>
-    <p class="text-xs text-slate-400">Collection & Trading multijoueur en temps réel</p>
-  </div>
-  <div class="space-y-2.5">
-    <input id="aid" class="w-full" placeholder="Pseudo ou adresse email">
-    <input id="apw" type="password" class="w-full" placeholder="Mot de passe (6 caractères min.)">
-  </div>
-  <div class="flex gap-2">
-    <button class="btn flex-1" data-a="login">Connexion</button>
-    <button class="btn2 flex-1" data-a="register">Inscription</button>
-  </div>
-</div>`);
-
+const getCfg=()=>{try{const l=JSON.parse(localStorage.ac_fbcfg||'null');if(l?.apiKey)return l}catch{}return firebaseConfig.apiKey?firebaseConfig:null};
+const setupScr=()=>scr(`<div class="glass p-6 max-w-lg w-full space-y-3 text-sm"><h2 class="text-xl font-bold text-white">Configuration Firebase</h2>
+<p class="text-slate-300">Aucune clé n'est stockée dans le code. Colle ici l'objet <code>firebaseConfig</code> de ton projet (Console Firebase → Paramètres du projet → Application web). Il sera conservé uniquement dans le stockage local de ton navigateur.</p>
+<textarea id="fbc" rows="8" class="w-full font-mono text-xs" placeholder='const firebaseConfig = { apiKey: "...", authDomain: "...", projectId: "...", appId: "..." };'></textarea>
+<p class="text-xs text-slate-400">Active Authentication (e-mail/mot de passe) et Cloud Firestore. Règles de départ :</p>
+<pre class="bg-black/40 p-2 rounded text-[11px] overflow-auto">rules_version = '2';
+service cloud.firestore { match /databases/{d}/documents {
+ match /{doc=**} { allow read, write: if request.auth != null; } } }</pre>
+<button class="btn w-full" data-a="saveCfg">Enregistrer et continuer</button></div>`);
+A.saveCfg=()=>{const t=$('#fbc').value,c={};for(const k of['apiKey','authDomain','projectId','storageBucket','messagingSenderId','appId']){const m=t.match(new RegExp(k+'["\']?\\s*:\\s*["\']([^"\']+)["\']'));if(m)c[k]=m[1]}
+  if(!c.apiKey||!c.projectId)return toast('apiKey et projectId sont obligatoires');localStorage.ac_fbcfg=JSON.stringify(c);location.reload()};
+A.resetCfg=()=>{localStorage.removeItem('ac_fbcfg');location.reload()};
+const authScr=()=>scr(`<div class="glass p-6 max-w-sm w-full space-y-4"><div class="text-center space-y-1"><h2 class="text-2xl font-bold text-white">ANIMECARDS</h2><p class="text-xs text-slate-400">Collection & Trading multijoueur en temps réel</p></div>
+<div class="space-y-2.5"><input id="aid" class="w-full" placeholder="Pseudo ou adresse email"><input id="apw" type="password" class="w-full" placeholder="Mot de passe (6 caractères min.)"></div>
+<div class="flex gap-2"><button class="btn flex-1" data-a="login">Connexion</button><button class="btn2 flex-1" data-a="register">Inscription</button></div>
+<button class="text-[11px] text-slate-500 w-full" data-a="resetCfg">Changer la configuration Firebase</button></div>`);
 const mail=v=>v.includes('@')?v:v.toLowerCase().replace(/[^a-z0-9_.-]/g,'')+'@animecards.app';
-A.login=async()=>{
-  try{await signInWithEmailAndPassword(auth,mail($('#aid').value.trim()),$('#apw').value)}
-  catch(e){fail('Connexion impossible : '+(e.code||e.message))}
-};
+A.login=async()=>{try{await signInWithEmailAndPassword(auth,mail($('#aid').value.trim()),$('#apw').value)}catch(e){fail('Connexion impossible : '+(e.code||e.message))}};
 A.register=async()=>{
-  const id=$('#aid').value.trim();
-  if(id.length<3)return toast('Pseudo trop court (3 caractères min.)');
+  const id=$('#aid').value.trim();if(id.length<3)return toast('Pseudo trop court (3 caractères min.)');
   try{
     const c=await createUserWithEmailAndPassword(auth,mail(id),$('#apw').value),name=id.split('@')[0];
-    await setDoc(doc(db,'users',c.user.uid),{
-      name,nameL:name.toLowerCase(),bio:'Collectionneur de cartes',title:'Recrue',
-      av:'🦊',avImg:'',banner:0,ac:500,earned:0,packs:10,last:Date.now(),
-      inv:{},val:0,wish:[],friends:[],reqs:[],opened:0,gradedCount:0,
-      ach:[],clanContributed:0,clanQuestsClaimed:[],
-      albums:{},master:'',nsfw:false,clan:null,seen:Date.now(),daily:0
-    });
+    await setDoc(doc(db,'users',c.user.uid),{name,nameL:name.toLowerCase(),bio:'Collectionneur de cartes',title:'Recrue',av:'🦊',avImg:'',avCard:'',banner:0,ac:500,earned:0,packs:10,last:Date.now(),
+      inv:{},val:0,wish:[],friends:[],reqs:[],sent:[],opened:0,gradedCount:0,ach:[],clanContributed:0,clanQuestsClaimed:[],hasReceivedWelcomePack:false,welcomePacks:0,
+      albums:{},master:'',nsfw:false,clan:null,seen:Date.now(),daily:0});
   }catch(e){fail('Inscription impossible : '+(e.code||e.message))}
 };
 A.logout=()=>signOut(auth);
 
 async function boot(){
   const cfg=getCfg();
+  if(!cfg)return setupScr();
   let all=await idbAll();
-  if(all.length>=100){
-    rarify(all);
-    reg(all);
-  }else{
-    scr(`<div class="glass p-6 w-full max-w-md text-center space-y-3">
-      <h2 class="text-lg font-bold text-white">Initialisation du catalogue</h2>
-      <div class="h-2 bg-white/10 rounded-full overflow-hidden"><div id="pb" class="h-2 bg-indigo-500 transition-all" style="width:15%"></div></div>
-      <p id="pm" class="text-xs text-slate-400">Chargement des 100 premières cartes…</p>
-    </div>`);
+  if(all.length>=100){rarify(all);reg(all)}
+  else{
+    scr(`<div class="glass p-6 w-full max-w-md text-center space-y-3"><h2 class="text-lg font-bold text-white">Initialisation du catalogue</h2>
+      <div class="h-2 bg-white/10 rounded-full overflow-hidden"><div id="pb" class="h-2 bg-indigo-500 transition-all" style="width:10%"></div></div>
+      <p id="pm" class="text-xs text-slate-400">Chargement du premier lot de cartes…</p><p class="text-[11px] text-slate-500">Le reste du catalogue (10 000 cartes) se charge ensuite en arrière-plan.</p></div>`);
     try{
-      for(let i=0;i<2;i++){
-        const b=$('#pb');if(b)b.style.width=((i+1)*45)+'%';
-        const rows=await fetchJob(JOBS[i]);
-        all.push(...rows);
-        await idbPut(rows);
-        if(i===0)await sleep(700);
+      for(let i=0;i<6;i++){
+        const b=$('#pb');if(b)b.style.width=((i+1)*15)+'%';
+        const rows=await fetchJob(JOBS[i]);all.push(...rows);await idbPut(rows);await sleep(500);
       }
-      rarify(all);
-      reg(all);
-      await idbPut(all);
+      rarify(all);reg(all);
     }catch(e){
-      rarify(all);
-      reg(all);
+      if(!all.length)all=cl(FALLBACK);
+      rarify(all);reg(all);
     }
   }
   await loadFB();
-  const app=initializeApp(cfg);
-  auth=getAuth(app);
-  db=getFirestore(app);
-  startBackgroundLazyLoader(all);
+  const app=initializeApp(cfg);auth=getAuth(app);db=getFirestore(app);
+  bgLoad(all);
   onAuthStateChanged(auth,u=>{
-    if(!u){
-      uid=null;
-      Object.keys(UN).forEach(k=>{UN[k]?.();delete UN[k]});
-      $('#app').classList.add('hidden');
-      return authScr();
-    }
-    uid=u.uid;
-    hideScr();
-    $('#app').classList.remove('hidden');
-    start();
+    window.__ac=2;
+    if(!u){uid=null;Object.keys(UN).forEach(k=>{UN[k]?.();delete UN[k]});S.u=null;$('#app').classList.add('hidden');return authScr()}
+    uid=u.uid;hideScr();$('#app').classList.remove('hidden');start();
   });
 }
 
+async function grantWelcome(){
+  try{
+    await runTransaction(db,async tx=>{
+      const s=await tx.get(ME());if(!s.exists())return;
+      const d=s.data();
+      if(d.hasReceivedWelcomePack||false)return;
+      tx.update(ME(),{hasReceivedWelcomePack:true,welcomePacks:(d.welcomePacks||0)+1});
+    });
+  }catch(e){}
+}
+
 function start(){
+  let firstU=true;
   sub('u',onSnapshot(ME(),s=>{
     if(!s.exists())return;
-    const first=!S.u;
-    S.u=s.data();
-    head();
-    soft();
-    if(first||S.frKey!==(S.u.friends||[]).join())subFriends();
-    if(first||S.cid!==S.u.clan)subClan();
+    S.u=s.data();head();soft();
+    if(firstU){firstU=false;if(!(S.u.hasReceivedWelcomePack||false))grantWelcome().then(()=>toast('🎁 Un pack de bienvenue exclusif t\'attend dans l\'onglet Packs !'))}
+    if(S.frKey!==(S.u.friends||[]).join())subFriends();
+    if(S.cid!==(S.u.clan||null)||!UN.cl)subClan();
   }));
-  sub('n',onSnapshot(query(collection(db,'users',uid,'notifs'),orderBy('ts','desc'),limit(30)),s=>{
-    S.notifs=s.docs.map(d=>({id:d.id,...d.data()}));
-    head();
-  }));
+  sub('n',onSnapshot(query(collection(db,'users',uid,'notifs'),orderBy('ts','desc'),limit(30)),s=>{S.notifs=s.docs.map(d=>({id:d.id,...d.data()}));head()}));
   let firstA=true;
   sub('a',onSnapshot(collection(db,'auctions'),s=>{
-    const all=s.docs.map(d=>({id:d.id,...d.data()}));
-    S.allAuc=all;
-    S.auc=all.filter(a=>a.status==='open');
-    if(!firstA){
-      s.docChanges().forEach(ch=>{
-        const a=ch.doc.data();
-        if(ch.type==='added'&&a.status==='open'&&a.seller!==uid&&(U().wish||[]).includes(a.card)){
-          notif(uid,`❤️ Wishlist : ${cd(a.card).name} est aux enchères (par ${a.sellerName}) !`);
-        }
-      });
-    }
-    firstA=false;
-    if(S.tab==='auc')soft();
+    S.allAuc=s.docs.map(d=>({id:d.id,...d.data()}));
+    S.auc=S.allAuc.filter(a=>a.status==='open');
+    buildMarket();
+    if(!firstA)s.docChanges().forEach(ch=>{const a=ch.doc.data();if(ch.type==='added'&&a.status==='open'&&a.seller!==uid&&(U().wish||[]).includes(a.card))notif(uid,`❤️ Wishlist : ${cd(a.card).name} est aux enchères (par ${a.sellerName}) !`,'wish')});
+    firstA=false;if(S.tab==='auc')soft();
   }));
-  sub('tin',onSnapshot(query(collection(db,'trades'),where('to','==',uid)),s=>{
-    S.trIn=s.docs.map(d=>({id:d.id,...d.data()}));
-    if(S.tab==='trade')soft();
-  }));
-  sub('tout',onSnapshot(query(collection(db,'trades'),where('from','==',uid)),s=>{
-    S.trOut=s.docs.map(d=>({id:d.id,...d.data()}));
-    if(S.tab==='trade')soft();
-  }));
-  sub('clans',onSnapshot(query(collection(db,'clans'),limit(50)),s=>{
-    S.clans=s.docs.map(d=>({id:d.id,...d.data()}));
-    if(S.tab==='soc')soft();
-  }));
+  sub('tin',onSnapshot(query(collection(db,'trades'),where('to','==',uid)),s=>{S.trIn=s.docs.map(d=>({id:d.id,...d.data()}));if(S.tab==='trade')soft()}));
+  sub('tout',onSnapshot(query(collection(db,'trades'),where('from','==',uid)),s=>{S.trOut=s.docs.map(d=>({id:d.id,...d.data()}));if(S.tab==='trade')soft()}));
+  sub('clans',onSnapshot(query(collection(db,'clans'),limit(50)),s=>{S.clans=s.docs.map(d=>({id:d.id,...d.data()}));if(S.tab==='soc')soft()}));
   sub('hb',(()=>{const i=setInterval(()=>saveU({seen:Date.now()}).catch(()=>{}),60000);return()=>clearInterval(i)})());
   saveU({seen:Date.now()}).catch(()=>{});
   sub('tick',(()=>{const i=setInterval(tick,1000);return()=>clearInterval(i)})());
 }
-
 function subFriends(){
-  const f=(U().friends||[]);
-  S.frKey=f.join();
+  const f=(U().friends||[]);S.frKey=f.join();
   if(!f.length){S.fr={};sub('fr',()=>{});return soft()}
-  sub('fr',onSnapshot(query(collection(db,'users'),where(documentId(),'in',f.slice(0,30))),s=>{
-    S.fr=Object.fromEntries(s.docs.map(d=>[d.id,d.data()]));
-    if(['soc','trade'].includes(S.tab))soft();
-  }));
+  sub('fr',onSnapshot(query(collection(db,'users'),where(documentId(),'in',f.slice(0,30))),s=>{S.fr=Object.fromEntries(s.docs.map(d=>[d.id,d.data()]));if(['soc','trade'].includes(S.tab))soft()}));
 }
-
 function subClan(){
-  const c=S.cid=U().clan;
+  const c=S.cid=U().clan||null;
   if(!c){S.clan=null;S.cmem=[];S.chat=[];sub('cl',()=>{});sub('cm',()=>{});sub('cc',()=>{});return soft()}
-  sub('cl',onSnapshot(doc(db,'clans',c),s=>{
-    S.clan=s.exists()?{id:s.id,...s.data()}:null;
-    if(S.tab==='soc')soft();
-  }));
-  sub('cm',onSnapshot(query(collection(db,'users'),where('clan','==',c)),s=>{
-    S.cmem=s.docs.map(d=>({id:d.id,...d.data()}));
-    if(S.tab==='soc')soft();
-  }));
-  sub('cc',onSnapshot(query(collection(db,'clans',c,'chat'),orderBy('ts','desc'),limit(50)),s=>{
-    S.chat=s.docs.map(d=>d.data()).reverse();
-    const l=$('#chatlog');
-    if(l){l.innerHTML=chatH();l.scrollTop=1e9}
-  }));
+  sub('cl',onSnapshot(doc(db,'clans',c),s=>{S.clan=s.exists()?{id:s.id,...s.data()}:null;if(S.tab==='soc')soft()}));
+  sub('cm',onSnapshot(query(collection(db,'users'),where('clan','==',c)),s=>{S.cmem=s.docs.map(d=>({id:d.id,...d.data()}));if(S.tab==='soc')soft()}));
+  sub('cc',onSnapshot(query(collection(db,'clans',c,'chat'),orderBy('ts','desc'),limit(50)),s=>{S.chat=s.docs.map(d=>d.data()).reverse();const l=$('#chatlog');if(l){l.innerHTML=chatH();l.scrollTop=1e9}}));
 }
 
-/* ============ 6. NAVIGATION, HEADER & BONUS QUOTIDIEN ============ */
-const TABS=[
-  ['packs','🎴 Packs'],
-  ['col','📚 Collection'],
-  ['grade','🔎 Gradation'],
-  ['codex','🌐 Codex'],
-  ['auc','🔨 Enchères'],
-  ['trade','🤝 Échanges'],
-  ['soc','👥 Social'],
-  ['ach','🏆 Succès'],
-  ['prof','👤 Profil']
-];
-
+/* ============ 7. NAVIGATION, NOTIFICATIONS CLIQUABLES, BONUS ============ */
+const TABS=[['packs','Packs'],['col','Collection'],['grade','Gradation'],['codex','Codex'],['auc','Enchères'],['trade','Échanges'],['soc','Social'],['ach','Succès'],['prof','Profil']];
+const NAVMAP={friend:['soc','friends'],clan:['soc','clans'],col:['col'],trade:['trade'],wish:['auc']};
 function head(){
   if(!S.u)return;
   $('#ac').textContent=(S.u.ac||0).toLocaleString();
-  const n=S.notifs.filter(x=>!x.read).length;
-  $('#bd').textContent=n||'';
+  const n=S.notifs.filter(x=>!x.read).length;$('#bd').textContent=n||'';
   $('#hd-av').innerHTML=avatarHTML(S.u,'w-7 h-7 text-xs');
-  const readyAch=getAchList().filter(a=>a.done&&!a.claimed).length;
+  const ready=getAchList().filter(a=>a.done&&!a.claimed).length,wp=(U().welcomePacks||0);
   $('#nav').innerHTML=TABS.map(([k,l])=>{
-    const badge=k==='ach'&&readyAch>0?`<span class="bg-amber-400 text-black text-[10px] font-bold px-1.5 rounded-full">${readyAch}</span>`:'';
-    return `<button class="tab snap-start ${S.tab===k?'on':''}" data-a="go" data-p="${k}">${l}${badge}</button>`;
+    const b=k==='ach'&&ready>0?`<span class="bg-amber-400 text-black text-[10px] font-bold px-1.5 rounded-full">${ready}</span>`:k==='packs'&&wp>0?`<span class="bg-amber-400 text-black text-[10px] font-bold px-1.5 rounded-full">1</span>`:'';
+    return `<button class="tab ${S.tab===k?'on':''}" data-a="go" data-p="${k}">${l}${b}</button>`;
   }).join('');
-  $('#nt').innerHTML=S.notifs.map(n=>`<div class="p-1.5 border-b border-white/5 ${n.read?'opacity-50':''}">${E(n.t)}<div class="text-[10px] text-slate-500 mt-0.5">${new Date(n.ts).toLocaleTimeString()}</div></div>`).join('')||'<p class="p-2 text-slate-500">Aucune notification</p>';
+  $('#nt').innerHTML=S.notifs.map(n=>`<button class="w-full text-left p-2 rounded border-b border-white/5 hover:bg-white/5 ${n.read?'opacity-50':''}" data-a="nclick" data-p="${E(n.type||'info')}">${E(n.t)}<div class="text-[10px] text-slate-500 mt-0.5">${new Date(n.ts).toLocaleTimeString()}</div></button>`).join('')||'<p class="p-2 text-slate-500">Aucune notification</p>';
   updateBgBadge();
 }
-
-A.bell=()=>{
-  const n=$('#nt');
-  n.classList.toggle('hidden');
-  if(n.classList.contains('hidden')){
-    const b=writeBatch(db);
-    S.notifs.filter(x=>!x.read).forEach(x=>b.update(doc(db,'users',uid,'notifs',x.id),{read:true}));
-    b.commit().catch(()=>{});
-  }
+function markRead(){const b=writeBatch(db);const u=S.notifs.filter(x=>!x.read);if(!u.length)return;u.forEach(x=>b.update(doc(db,'users',uid,'notifs',x.id),{read:true}));b.commit().catch(()=>{})}
+A.bell=()=>{const n=$('#nt');n.classList.toggle('hidden');if(n.classList.contains('hidden'))markRead()};
+A.nclick=type=>{
+  $('#nt').classList.add('hidden');markRead();
+  const m=NAVMAP[type];if(!m)return;
+  S.tab=m[0];if(m[1])S.socTab=m[1];render();
 };
 A.go=t=>{S.tab=t;render()};
-
 const VIEWS=()=>({packs:vPacks,col:vCol,grade:vGrade,codex:vCodex,auc:vAuc,trade:vTrade,soc:vSoc,ach:vAch,prof:vProf});
 function render(){
-  if(!S.u)return;
-  head();
+  if(!S.u)return;head();
   $('#main').innerHTML=VIEWS()[S.tab]();
-  if(S.tab==='codex')fillCodex();
-  if(S.tab==='col')colUpd();
-  if(S.tab==='grade')gradeUpd();
+  if(S.tab==='codex')fillCodex();if(S.tab==='col')colUpd();if(S.tab==='grade')gradeUpd();
   if(S.tab==='soc'){const l=$('#chatlog');if(l)l.scrollTop=1e9}
 }
-const soft=()=>{
-  head();
-  if(S.busy||document.activeElement?.matches?.('#main input,#main select,#main textarea'))return;
-  render();
-};
-function modal(h,keep){
-  const o=$('#ov');
-  o.innerHTML=h;
-  o.classList.remove('hidden');
-  o.onclick=e=>{if(e.target===o&&!keep)closeM()};
-}
-const closeM=()=>{$('#ov').classList.add('hidden');$('#ov').innerHTML=''};
-A.close=closeM;
-
-function clanLvl(){
-  if(!S.clan)return 0;
-  return 1+Math.floor((S.clan.treasury||0)/2000);
-}
-function packIntervalMs(){
-  const lvl=clanLvl();
-  const bonusSec=Math.min(45,lvl*5);
-  return (300-bonusSec)*1000;
-}
-
+const soft=()=>{head();if(S.busy||document.activeElement?.matches?.('#main input,#main select,#main textarea'))return;render()};
+function modal(h,keep){const o=$('#ov');o.innerHTML=h;o.classList.remove('hidden');o.onclick=e=>{if(e.target===o&&!keep)closeM()}}
+const closeM=()=>{$('#ov').classList.add('hidden');$('#ov').innerHTML=''};A.close=closeM;
+function clanLvl(){return S.clan?1+Math.floor((S.clan.treasury||0)/2000):0}
+const packIntervalMs=()=>(300-Math.min(45,clanLvl()*5))*1000;
 A.daily=async()=>{
   const l=U().daily||0;
   if(Date.now()-l<864e5)return toast('Bonus déjà réclamé : reviens dans '+Math.ceil((864e5-(Date.now()-l))/36e5)+' h');
-  const bonus=300+clanLvl()*25;
-  await saveU({daily:Date.now(),ac:(U().ac||0)+bonus,earned:(U().earned||0)+bonus});
-  toast(`+${bonus} AC réclamés !`);
+  const b=300+clanLvl()*25;await saveU({daily:Date.now(),ac:(U().ac||0)+b,earned:(U().earned||0)+b});toast(`+${b} AC réclamés !`);
 };
 
-/* ============ 7. PACKS, VISUEL BOOSTER & ANIMATION LÉGENDAIRE/MYTHIQUE ============ */
-function boosterVisualHTML(subText='5 CARTES'){
-  return `<div class="pack-foil"></div>
-  ${PACK_IMG_URL?`<img src="${E(PACK_IMG_URL)}" class="absolute inset-0 w-full h-full object-cover z-[2]" onerror="this.remove()">`:''}
+/* ============ 8. PACKS : STANDARD & PACK DE BIENVENUE ============ */
+function boosterVisualHTML(subText,gold){
+  const t1=gold?'text-amber-950':'text-slate-100',t2=gold?'text-amber-900':'text-slate-200',t3=gold?'text-amber-950':'text-indigo-300';
+  return `<div class="pack-foil"></div>${PACK_IMG_URL?`<img src="${E(PACK_IMG_URL)}" class="absolute inset-0 w-full h-full object-cover z-[2]" onerror="this.remove()">`:''}
   <div class="relative z-[1] w-full h-full flex flex-col items-center justify-between py-6 px-4 text-center">
-    <div class="absolute inset-3.5 border border-indigo-200/30 rounded-sm pointer-events-none"></div>
-    <div class="mt-1">
-      <div class="text-xl font-black tracking-[0.18em] text-slate-100 leading-none drop-shadow">ANIME<span class="text-indigo-300">⚡</span></div>
-      <div class="text-xl font-black tracking-[0.18em] text-slate-200 leading-tight drop-shadow">CARDS</div>
-    </div>
-    <div class="relative w-32 h-32 flex items-center justify-center my-1">
-      <svg viewBox="0 0 120 120" class="w-full h-full text-slate-200/85">
-        <circle cx="60" cy="60" r="50" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.65"/>
-        <circle cx="60" cy="60" r="44" fill="none" stroke="currentColor" stroke-width="0.7" stroke-dasharray="3 3" opacity="0.5"/>
-        <circle cx="96" cy="28" r="9" fill="#0d111c" stroke="currentColor" stroke-width="1"/>
-        <circle cx="24" cy="92" r="8" fill="#0d111c" stroke="currentColor" stroke-width="1"/>
-        <path d="M60 22 C49 22 42 32 42 44 C42 54 34 65 28 76 C40 74 46 66 49 60 L44 96 L76 96 L71 60 C74 66 80 74 92 76 C86 65 78 54 78 44 C78 32 71 22 60 22 Z" fill="none" stroke="currentColor" stroke-width="1.3"/>
-        <circle cx="60" cy="39" r="9" fill="none" stroke="currentColor" stroke-width="1.3"/>
-        <path d="M46 32 L54 37 M74 32 L66 37 M48 62 L72 62 M46 67 L74 67" stroke="currentColor" stroke-width="1.1"/>
-        <polygon points="24,28 26,33 31,35 26,37 24,42 22,37 17,35 22,33" fill="currentColor" opacity="0.75"/>
-        <polygon points="94,84 95.5,88 99.5,89.5 95.5,91 94,95 92.5,91 88.5,89.5 92.5,88" fill="currentColor" opacity="0.75"/>
-      </svg>
-    </div>
-    <div class="mb-1 space-y-0.5">
-      <div class="text-[10px] font-bold tracking-[0.2em] text-slate-200 uppercase">ÉDITION STANDARD</div>
-      <div class="text-[8px] font-semibold tracking-[0.18em] text-slate-400 uppercase">BOOSTER PACK</div>
-      <div class="text-[9px] font-bold tracking-[0.16em] text-indigo-300 uppercase pt-0.5">${E(subText)}</div>
-    </div>
+    <div class="absolute inset-3.5 border ${gold?'border-amber-900/40':'border-indigo-200/30'} rounded-sm pointer-events-none"></div>
+    <div class="mt-1"><div class="ttl text-lg font-black tracking-[0.16em] ${t1} leading-none">ANIME<span class="${t3}">⚡</span></div><div class="ttl text-lg font-black tracking-[0.16em] ${t2} leading-tight">CARDS</div></div>
+    <div class="relative w-28 h-28 flex items-center justify-center my-1"><svg viewBox="0 0 120 120" class="w-full h-full ${gold?'text-amber-950/80':'text-slate-200/85'}">
+      <circle cx="60" cy="60" r="50" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".65"/><circle cx="60" cy="60" r="44" fill="none" stroke="currentColor" stroke-width=".7" stroke-dasharray="3 3" opacity=".5"/>
+      <path d="M60 22 C49 22 42 32 42 44 C42 54 34 65 28 76 C40 74 46 66 49 60 L44 96 L76 96 L71 60 C74 66 80 74 92 76 C86 65 78 54 78 44 C78 32 71 22 60 22 Z" fill="none" stroke="currentColor" stroke-width="1.3"/>
+      <circle cx="60" cy="39" r="9" fill="none" stroke="currentColor" stroke-width="1.3"/><polygon points="24,28 26,33 31,35 26,37 24,42 22,37 17,35 22,33" fill="currentColor" opacity=".75"/><polygon points="94,84 95.5,88 99.5,89.5 95.5,91 94,95 92.5,91 88.5,89.5 92.5,88" fill="currentColor" opacity=".75"/></svg></div>
+    <div class="mb-1 space-y-0.5"><div class="text-[10px] font-bold tracking-[0.2em] ${t2} uppercase">${gold?'ÉDITION BIENVENUE':'ÉDITION STANDARD'}</div><div class="text-[8px] font-semibold tracking-[0.18em] ${gold?'text-amber-900':'text-slate-400'} uppercase">BOOSTER PACK</div><div class="text-[9px] font-bold tracking-[0.14em] ${t3} uppercase pt-0.5">${E(subText)}</div></div>
   </div>`;
 }
-
-function curPacks(){
-  let p=U().packs??10,l=U().last||Date.now();
-  const n=Date.now(),iv=packIntervalMs();
-  while(p<10&&n-l>=iv){p++;l+=iv}
-  if(p>=10)l=n;
-  return{p,l,iv};
-}
-
+function curPacks(){let p=U().packs??10,l=U().last||Date.now();const n=Date.now(),iv=packIntervalMs();while(p<10&&n-l>=iv){p++;l+=iv}if(p>=10)l=n;return{p,l,iv}}
 function vPacks(){
-  const {p}=curPacks();
-  const lvl=clanLvl();
-  return `<div class="text-center space-y-5 py-6">
-    <div class="pack" data-a="openPack">${boosterVisualHTML('5 CARTES')}</div>
-    <div class="space-y-1">
-      <p class="text-lg font-semibold text-white">Boosters disponibles : <b id="pk" class="text-indigo-400">${p}</b> / 10</p>
-      <p class="text-xs text-slate-400">Prochain booster dans <b id="cd" class="text-slate-200"></b>${lvl?` <span class="text-emerald-400">(Bonus Clan Niv.${lvl} : -${Math.min(45,lvl*5)}s)</span>`:''}</p>
-    </div>
-    <button class="btn text-sm px-6 py-2.5 shadow-lg shadow-indigo-500/20" data-a="openPack" ${p<1?'disabled':''}>Ouvrir un booster (5 cartes)</button>
-  </div>`;
+  const {p}=curPacks(),lvl=clanLvl(),wp=U().welcomePacks||0;
+  return `<div class="text-center space-y-8 py-4">
+    ${wp>0?`<div class="space-y-3"><div class="inline-block px-3 py-1 rounded-full text-xs font-bold bg-amber-500/15 text-amber-300 border border-amber-400/40">🎁 CADEAU DE BIENVENUE · 5 cartes Rare ou supérieur garanties</div>
+      <div class="pack gold" data-a="openWelcome">${boosterVisualHTML('5 CARTES · RARE+',true)}</div>
+      <button class="btn gold px-6 py-2.5" data-a="openWelcome">Ouvrir mon pack de bienvenue</button></div>`:''}
+    <div class="space-y-5">
+      <div class="pack" data-a="openPack">${boosterVisualHTML('5 CARTES',false)}</div>
+      <div class="space-y-1"><p class="text-lg font-semibold text-white">Boosters disponibles : <b id="pk" class="text-indigo-400">${p}</b> / 10</p>
+      <p class="text-xs text-slate-400">Prochain booster dans <b id="cd" class="text-slate-200"></b>${lvl?` <span class="text-emerald-400">(Clan Niv.${lvl} : -${Math.min(45,lvl*5)}s)</span>`:''}</p></div>
+      <button class="btn text-sm px-6 py-2.5" data-a="openPack" ${p<1?'disabled':''}>Ouvrir un booster (5 cartes)</button>
+      <p class="text-[11px] text-slate-500">Catalogue : ${POOL.length.toLocaleString('fr-FR')} cartes disponibles</p>
+    </div></div>`;
 }
-
-A.openPack=async()=>{
+A.openPack=()=>doOpen(false);
+A.openWelcome=()=>doOpen(true);
+async function doOpen(welcome){
   if(S.P)return;
-  const {p,l}=curPacks();
-  if(p<1)return toast('Aucun booster disponible pour le moment');
-  const cs=[...Array(5)].map(draw).sort((a,b)=>RO.indexOf(cd(a).rar)-RO.indexOf(cd(b).rar));
+  let p=0,l=0;
+  if(welcome){if((U().welcomePacks||0)<1)return}
+  else{({p,l}=curPacks());if(p<1)return toast('Aucun booster disponible pour le moment')}
+  if(POOL.length>40&&!avail().some(p=>p.rar==='C'))return toast('Le catalogue finit de se charger, réessaie dans quelques secondes…');
+  if(!POOL.length)return toast('Catalogue en cours de chargement…');
+  const w=welcome?W_WEL:W_STD;
+  const cs=[...Array(5)].map(()=>draw(w)).sort((a,b)=>RO.indexOf(cd(a).rar)-RO.indexOf(cd(b).rar));
   const inv=cl(U().inv||{});
-  const ownedBefore=cs.map(id=>{
-    const before=cntTotal(inv,id);
-    addC(inv,id,0,1);
-    return before;
-  });
-  S.P={cs,ownedBefore,i:0,tear:0,flip:0};
-  pov();
+  const ownedBefore=cs.map(id=>{const b=cntTotal(inv,id);addC(inv,id,0,1);return b});
+  S.P={cs,ownedBefore,i:0,tear:0,flip:0,welcome};pov();
   try{
-    await saveInv(inv,{packs:p-1,last:l,opened:(U().opened||0)+1});
+    const extra=welcome?{welcomePacks:Math.max(0,(U().welcomePacks||1)-1)}:{packs:p-1,last:l};
+    await saveInv(inv,{...extra,opened:(U().opened||0)+1});
     if(U().clan){
-      const hiCount=cs.filter(id=>['L','M'].includes(cd(id).rar)).length;
-      const clRef=doc(db,'clans',U().clan);
-      runTransaction(db,async tx=>{
-        const csDoc=await tx.get(clRef);
-        if(!csDoc.exists())return;
-        const q=cl(csDoc.data().quests||{packs:0,coins:0,rares:0});
-        q.packs=(q.packs||0)+1;
-        q.rares=(q.rares||0)+hiCount;
-        tx.update(clRef,{quests:q});
-      }).catch(()=>{});
+      const hi=cs.filter(id=>['L','M'].includes(cd(id).rar)).length,cr=doc(db,'clans',U().clan);
+      runTransaction(db,async tx=>{const c=await tx.get(cr);if(!c.exists())return;const q=cl(c.data().quests||{packs:0,coins:0,rares:0});q.packs=(q.packs||0)+1;q.rares=(q.rares||0)+hi;tx.update(cr,{quests:q})}).catch(()=>{});
     }
-  }catch(e){
-    S.P=null;
-    closeM();
-    fail(e);
-  }
-};
-
-function spawnParticles(rar){
-  const colors=rar==='M'?['#f472b6','#60a5fa','#facc15','#34d399','#a78bfa']:['#facc15','#f59e0b','#fde047','#ffffff'];
-  let html='';
-  for(let i=0;i<28;i++){
-    const ang=(Math.PI*2*i)/28+(Math.random()*.3);
-    const dist=95+Math.random()*95;
-    const tx=Math.round(Math.cos(ang)*dist)+'px';
-    const ty=Math.round(Math.sin(ang)*dist)+'px';
-    const col=colors[i%colors.length];
-    html+=`<span class="ptc" style="background:${col};box-shadow:0 0 8px ${col};--tx:${tx};--ty:${ty}"></span>`;
-  }
-  return html;
+  }catch(e){S.P=null;closeM();fail(e)}
 }
-
+function spawnParticles(rar){
+  const cols=rar==='M'?['#f472b6','#60a5fa','#facc15','#34d399','#a78bfa']:['#facc15','#f59e0b','#fde047','#ffffff'];let h='';
+  for(let i=0;i<28;i++){const a=(Math.PI*2*i)/28+Math.random()*.3,d=95+Math.random()*95,c=cols[i%cols.length];
+    h+=`<span class="ptc" style="background:${c};box-shadow:0 0 8px ${c};--tx:${Math.round(Math.cos(a)*d)}px;--ty:${Math.round(Math.sin(a)*d)}px"></span>`}
+  return h;
+}
 function pov(){
   const P=S.P;
-  if(!P.tear){
-    return modal(`<div class="text-center space-y-3"><div class="pack" id="pk1" data-a="tear">${boosterVisualHTML('CLIQUE POUR DÉCHIRER')}</div><p class="text-xs text-slate-400">Clique sur le booster pour l'ouvrir</p></div>`,1);
-  }
-  const id=P.cs[P.i],c=cd(id),prev=P.ownedBefore[P.i];
-  const isL=c.rar==='L',isM=c.rar==='M',hi=isL||isM;
+  if(!P.tear)return modal(`<div class="text-center space-y-3"><div class="pack ${P.welcome?'gold':''}" id="pk1" data-a="tear">${boosterVisualHTML('CLIQUE POUR DÉCHIRER',P.welcome)}</div><p class="text-xs text-slate-400">Clique sur le booster pour l'ouvrir</p></div>`,1);
+  const id=P.cs[P.i],c=cd(id),prev=P.ownedBefore[P.i],isL=c.rar==='L',isM=c.rar==='M',hi=isL||isM;
   const flash=P.flip&&hi?`<div class="screen-flash" style="background:${isM?'radial-gradient(circle,rgba(244,114,182,.55),rgba(96,165,250,.45),transparent 75%)':'radial-gradient(circle,rgba(250,204,21,.55),transparent 75%)'}"></div>`:'';
-  const badge=P.flip
-    ?(prev===0
-      ?`<div class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 mb-2">✨ NOUVELLE CARTE</div>`
-      :`<div class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-500/15 text-amber-300 border border-amber-400/30 mb-2">Déjà possédée (x${prev})</div>`)
-    :`<div class="h-6 mb-2"></div>`;
-  const banner=P.flip&&hi
-    ?`<div class="mb-2 text-xs font-extrabold tracking-widest uppercase ${isM?'text-pink-400':'text-amber-300'} animate-pulse">⚡ TIRAGE EXCEPTIONNEL · ${R[c.rar].n.toUpperCase()} !</div>`
-    :'';
-
-  modal(`${flash}<div class="text-center w-60 sm:w-64 ${P.flip&&hi?'shake':''}">
-    ${banner}
-    ${badge}
-    <div class="relative" data-a="nextC">
-      ${P.flip&&isL?'<div class="halo-L"></div>':''}
-      ${P.flip&&isM?'<div class="halo-M"></div>':''}
-      ${P.flip&&hi?spawnParticles(c.rar):''}
-      ${P.flip?`<div class="relative z-10 fx-${c.rar}">${card(c)}</div>`:'<div class="card back">✦</div>'}
-    </div>
-    <p class="mt-4 text-xs text-slate-400">${P.i+1}/5 — ${P.flip?(P.i<4?'Clique pour la carte suivante':'Clique pour terminer'):'Clique sur la carte pour la révéler'}</p>
-  </div>`,1);
+  const badge=P.flip?(prev===0?`<div class="inline-flex px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 mb-2">✨ NOUVELLE CARTE</div>`:`<div class="inline-flex px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-500/15 text-amber-300 border border-amber-400/30 mb-2">Déjà possédée (x${prev})</div>`):`<div class="h-6 mb-2"></div>`;
+  const banner=P.flip&&hi?`<div class="mb-2 text-xs font-extrabold tracking-widest uppercase ${isM?'text-pink-400':'text-amber-300'} animate-pulse">TIRAGE EXCEPTIONNEL · ${R[c.rar].n.toUpperCase()} !</div>`:'';
+  modal(`${flash}<div class="text-center w-60 sm:w-64 ${P.flip&&hi?'shake':''}">${banner}${badge}
+    <div class="relative" data-a="nextC">${P.flip&&isL?'<div class="halo-L"></div>':''}${P.flip&&isM?'<div class="halo-M"></div>':''}${P.flip&&hi?spawnParticles(c.rar):''}
+    ${P.flip?`<div class="relative z-10 fx-${c.rar}">${card(c)}</div>`:'<div class="card back">✦</div>'}</div>
+    <p class="mt-4 text-xs text-slate-400">${P.i+1}/5 — ${P.flip?(P.i<4?'Clique pour la carte suivante':'Clique pour terminer'):'Clique sur la carte pour la révéler'}</p></div>`,1);
 }
-
-A.tear=()=>{
-  $('#pk1')?.classList.add('torn');
-  setTimeout(()=>{S.P.tear=1;pov()},480);
-};
+A.tear=()=>{AU.swoosh();$('#pk1')?.classList.add('torn');setTimeout(()=>{S.P.tear=1;pov()},480)};
 A.nextC=()=>{
   const P=S.P;
-  if(!P.flip){P.flip=1;return pov()}
+  if(!P.flip){P.flip=1;AU.flip();if(['L','M'].includes(cd(P.cs[P.i]).rar))setTimeout(()=>AU.jingle(),220);return pov()}
   if(P.i<4){P.i++;P.flip=0;return pov()}
-  S.P=null;
-  closeM();
-  render();
+  S.P=null;closeM();render();
 };
 
-/* ============ 8. COLLECTION, ALBUMS & ANALYSE DU MARCHÉ RÉELLE ============ */
+/* ============ 9. COLLECTION, ALBUMS & ANALYSE DU MARCHÉ ============ */
 const keyOf=s=>s.id+'|'+s.g;
 const parse=k=>{const [i,g]=String(k).split('|');return{id:i,g:+(g||0)}};
-
 function filtered(){
   const F=S.F,al=F.a?(U().albums||{})[F.a]||[]:null;
   return stacks(U().inv).filter(s=>{
     const c=cd(s.id);
     if(F.q&&!c.name.toLowerCase().includes(F.q.toLowerCase()))return false;
     if(F.r&&c.rar!==F.r)return false;
-    if(F.g==='g'&&!s.g)return false;
-    if(F.g==='u'&&s.g)return false;
+    if(F.g==='g'&&!s.g)return false;if(F.g==='u'&&s.g)return false;
     if(F.d&&s.n<2)return false;
     if(al&&!al.includes(keyOf(s)))return false;
     return true;
   }).sort((a,b)=>RO.indexOf(cd(b.id).rar)-RO.indexOf(cd(a.id).rar)||b.g-a.g||sellP(b.id,b.g)-sellP(a.id,a.g));
 }
-
 function vCol(){
   const F=S.F;
-  return `<div class="space-y-4">
-    <div class="glass p-3 flex flex-wrap gap-2 items-center">
-      <input placeholder="Rechercher dans ma collection…" value="${E(F.q)}" data-i="fq" class="flex-1 min-w-[160px]">
-      <select data-c="fr">
-        <option value="">Toutes raretés</option>
-        ${RO.map(k=>`<option value="${k}" ${F.r===k?'selected':''}>${R[k].n}</option>`).join('')}
-      </select>
-      <select data-c="fg">
-        <option value="">Toute gradation</option>
-        <option value="g" ${F.g==='g'?'selected':''}>Gradées (PSA)</option>
-        <option value="u" ${F.g==='u'?'selected':''}>Non gradées</option>
-      </select>
-      <select data-c="fa">
-        <option value="">Tous les albums</option>
-        ${Object.keys(U().albums||{}).map(a=>`<option ${F.a===a?'selected':''}>${E(a)}</option>`).join('')}
-      </select>
-      <label class="text-xs flex items-center gap-1.5 px-2 py-1 rounded bg-white/5 cursor-pointer">
-        <input type="checkbox" ${F.d?'checked':''} data-c="fd"> Doublons
-      </label>
-      <button class="btn2" data-a="newAlbum">＋ Album</button>
-      <button class="btn2" data-a="sellDup">♻ Vendre doublons</button>
-    </div>
-    <p id="cn" class="text-xs text-slate-400"></p>
-    <div id="grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-3"></div>
-    <div id="col-more" class="text-center pt-2"></div>
-  </div>`;
+  return `<div class="space-y-4"><div class="glass p-3 flex flex-wrap gap-2 items-center">
+    <input placeholder="Rechercher dans ma collection…" value="${E(F.q)}" data-i="fq" class="flex-1 min-w-[160px]">
+    <select data-c="fr"><option value="">Toutes raretés</option>${RO.map(k=>`<option value="${k}" ${F.r===k?'selected':''}>${R[k].n}</option>`).join('')}</select>
+    <select data-c="fg"><option value="">Toute gradation</option><option value="g" ${F.g==='g'?'selected':''}>Gradées (PSA)</option><option value="u" ${F.g==='u'?'selected':''}>Non gradées</option></select>
+    <select data-c="fa"><option value="">Tous les albums</option>${Object.keys(U().albums||{}).map(a=>`<option ${F.a===a?'selected':''}>${E(a)}</option>`).join('')}</select>
+    <label class="text-xs flex items-center gap-1.5 px-2 py-1 rounded bg-white/5 cursor-pointer"><input type="checkbox" ${F.d?'checked':''} data-c="fd"> Doublons</label>
+    <button class="btn2" data-a="newAlbum">＋ Album</button><button class="btn2" data-a="sellDup">♻ Vendre doublons</button></div>
+    <p id="cn" class="text-xs text-slate-400"></p><div id="grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-3"></div><div id="col-more" class="text-center pt-2"></div></div>`;
 }
-
 function colUpd(){
-  const L=filtered();
-  const cn=$('#cn'),gr=$('#grid'),mr=$('#col-more');
-  if(!cn||!gr)return;
+  const L=filtered(),cn=$('#cn'),gr=$('#grid'),mr=$('#col-more');if(!cn||!gr)return;
   cn.textContent=`${L.length} pile(s) affichée(s) · Valeur totale de revente : ${invVal(U().inv).toLocaleString()} AC`;
-  const slice=L.slice(0,S.F.n||60);
-  gr.innerHTML=slice.map(s=>tile(s,'show')).join('')||'<p class="col-span-full text-sm text-slate-500 py-8 text-center">Aucune carte ne correspond à ces critères.</p>';
-  if(mr)mr.innerHTML=L.length>slice.length?`<button class="btn2" data-a="moreCol">Afficher plus (${L.length-slice.length} restantes)</button>`:'';
+  const sl=L.slice(0,S.F.n||60);
+  gr.innerHTML=sl.map(s=>tile(s,'show')).join('')||'<p class="col-span-full text-sm text-slate-500 py-8 text-center">Aucune carte ne correspond à ces critères.</p>';
+  if(mr)mr.innerHTML=L.length>sl.length?`<button class="btn2" data-a="moreCol">Afficher plus (${L.length-sl.length} restantes)</button>`:'';
 }
-
-A.fq=v=>{S.F.q=v;S.F.n=60;colUpd()};
-A.fr=v=>{S.F.r=v;S.F.n=60;colUpd()};
-A.fg=v=>{S.F.g=v;S.F.n=60;colUpd()};
-A.fa=v=>{S.F.a=v;S.F.n=60;colUpd()};
-A.fd=(v,el)=>{S.F.d=el.checked;S.F.n=60;colUpd()};
-A.moreCol=()=>{S.F.n=(S.F.n||60)+60;colUpd()};
-A.newAlbum=()=>{
-  const n=prompt('Nom du nouvel album :');
-  if(n&&!(U().albums||{})[n])saveU({['albums.'+n.replace(/\./g,'_')]:[]});
-};
+A.fq=v=>{S.F.q=v;S.F.n=60;colUpd()};A.fr=v=>{S.F.r=v;S.F.n=60;colUpd()};A.fg=v=>{S.F.g=v;S.F.n=60;colUpd()};A.fa=v=>{S.F.a=v;S.F.n=60;colUpd()};
+A.fd=(v,el)=>{S.F.d=el.checked;S.F.n=60;colUpd()};A.moreCol=()=>{S.F.n=(S.F.n||60)+60;colUpd()};
+A.newAlbum=()=>{const n=prompt('Nom du nouvel album :');if(n&&!(U().albums||{})[n])saveU({['albums.'+n.replace(/\./g,'_')]:[]})};
 A.sellDup=async()=>{
-  const inv=cl(U().inv||{});
-  let g=0,n=0;
-  for(const id in inv){
-    const q=inv[id].q;
-    if(q>1){g+=(q-1)*sellP(id,0);n+=q-1;inv[id].q=1}
-  }
+  const inv=cl(U().inv||{});let g=0,n=0;
+  for(const id in inv){const q=inv[id].q;if(q>1){g+=(q-1)*sellP(id,0);n+=q-1;inv[id].q=1}}
   if(!n)return toast('Aucun doublon non gradé à vendre');
-  await saveInv(inv,{ac:(U().ac||0)+g,earned:(U().earned||0)+g});
-  toast(`${n} doublon(s) vendus : +${g.toLocaleString()} AC`);
+  await saveInv(inv,{ac:(U().ac||0)+g,earned:(U().earned||0)+g});toast(`${n} doublon(s) vendus : +${g.toLocaleString()} AC`);
 };
-
-/* Calcul de la valeur moyenne réelle sur le marché (enchères en cours et ventes terminées) par gradation */
 function getCardMarketStats(id){
-  const list=(S.allAuc||[]).filter(a=>a.card===id&&(a.status==='open'||a.bidder));
-  const byGrade={};
-  list.forEach(a=>{
-    const gr=+(a.grade||0);
-    if(!byGrade[gr])byGrade[gr]=[];
-    byGrade[gr].push(+(a.bid||0));
-  });
-  const avgByGrade={};
-  for(const gr in byGrade){
-    const arr=byGrade[gr];
-    avgByGrade[gr]={
-      avg:Math.round(arr.reduce((s,v)=>s+v,0)/arr.length),
-      count:arr.length
-    };
-  }
-  return {totalCount:list.length,avgByGrade};
+  const list=(S.allAuc||[]).filter(a=>a.card===id&&(a.status==='open'||a.bidder)),by={};
+  list.forEach(a=>{const g=+(a.grade||0);(by[g]=by[g]||[]).push(+(a.bid||0))});
+  const avgByGrade={};for(const g in by)avgByGrade[g]={avg:Math.round(by[g].reduce((s,v)=>s+v,0)/by[g].length),count:by[g].length};
+  return{totalCount:list.length,avgByGrade};
 }
-
 function marketAnalysisHTML(id,g){
   const {totalCount,avgByGrade}=getCardMarketStats(id);
-  const curGradeLabel=g?`PSA ${g} (${GN[g]})`:'Non gradée';
-
-  if(totalCount===0){
-    return `<div class="glass bg-[#090b10] p-3 space-y-1.5 text-xs border border-white/10">
-      <div class="font-semibold text-indigo-300">📊 Valeur moyenne sur le marché</div>
-      <div class="p-2.5 rounded bg-white/5 text-slate-400 text-center">
-        Aucune information disponible sur le marché
-      </div>
-    </div>`;
-  }
-
-  const curStat=avgByGrade[g];
-  const otherGrades=Object.keys(avgByGrade).map(Number).sort((a,b)=>a-b);
-
-  return `<div class="glass bg-[#090b10] p-3 space-y-2 text-xs border border-white/10">
-    <div class="font-semibold text-indigo-300 flex items-center justify-between">
-      <span>📊 Valeur moyenne sur le marché</span>
-      <span class="text-[11px] text-slate-400">${totalCount} enchère(s) répertoriée(s)</span>
-    </div>
-    <div class="p-2 rounded bg-white/5 flex items-center justify-between">
-      <span class="text-slate-300">État actuel (<b>${curGradeLabel}</b>) :</span>
-      ${curStat
-        ?`<b class="text-amber-300 text-sm">${curStat.avg.toLocaleString()} AC <span class="text-[10px] font-normal text-slate-400">(${curStat.count} offre${curStat.count>1?'s':''})</span></b>`
-        :`<span class="text-slate-400 italic">Aucune donnée pour cette gradation</span>`}
-    </div>
-    ${otherGrades.length?`<div class="pt-1 border-t border-white/10">
-      <div class="text-[10px] text-slate-400 mb-1.5">Moyenne constatée sur le marché par gradation :</div>
-      <div class="grid grid-cols-2 sm:grid-cols-3 gap-1 text-[11px]">
-        ${otherGrades.map(gr=>`<div class="p-1.5 rounded flex items-center justify-between ${gr===g?'bg-indigo-500/25 border border-indigo-400/40':'bg-white/5'}">
-          <span class="text-slate-300">${gr?`PSA ${gr}`:'Non gradée'}</span>
-          <b class="text-white">${avgByGrade[gr].avg.toLocaleString()} AC</b>
-        </div>`).join('')}
-      </div>
-    </div>`:''}
-  </div>`;
+  if(!totalCount)return `<div class="glass bg-[#090b10] p-3 space-y-1.5 text-xs"><div class="font-semibold text-indigo-300">📊 Valeur moyenne sur le marché</div><div class="p-2.5 rounded bg-white/5 text-slate-400 text-center">Aucune information disponible sur le marché</div></div>`;
+  const cur=avgByGrade[g],others=Object.keys(avgByGrade).map(Number).sort((a,b)=>a-b);
+  return `<div class="glass bg-[#090b10] p-3 space-y-2 text-xs"><div class="font-semibold text-indigo-300 flex justify-between"><span>📊 Valeur moyenne sur le marché</span><span class="text-[11px] text-slate-400">${totalCount} enchère(s)</span></div>
+    <div class="p-2 rounded bg-white/5 flex justify-between"><span class="text-slate-300">État actuel (<b>${g?'PSA '+g:'Non gradée'}</b>) :</span>${cur?`<b class="text-amber-300">${cur.avg.toLocaleString()} AC <span class="text-[10px] font-normal text-slate-400">(${cur.count})</span></b>`:'<span class="text-slate-400 italic">Aucune donnée</span>'}</div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 gap-1 text-[11px]">${others.map(x=>`<div class="p-1.5 rounded flex justify-between ${x===g?'bg-indigo-500/25 border border-indigo-400/40':'bg-white/5'}"><span class="text-slate-300">${x?'PSA '+x:'Non gradée'}</span><b class="text-white">${avgByGrade[x].avg.toLocaleString()} AC</b></div>`).join('')}</div></div>`;
 }
-
 A.show=k=>{
-  const {id,g}=parse(k),n=cnt(U().inv||{},id,g);
-  if(!n)return;
-  const c=cd(id),w=(U().wish||[]).includes(id);
+  const {id,g}=parse(k),n=cnt(U().inv||{},id,g);if(!n)return;
+  const c=cd(id),w=(U().wish||[]).includes(id),r=er(c);
   modal(`<div class="glass bg-[#11141d] p-4 sm:p-5 flex flex-col sm:flex-row gap-4 max-w-2xl w-full items-center sm:items-start">
     <div class="w-44 sm:w-48 shrink-0 relative">${n>1?`<span class="cnt">x${n}</span>`:''}${slab(c,g)}</div>
-    <div class="space-y-2.5 text-sm flex-1 w-full">
-      <div>
-        <h3 class="font-bold text-lg text-white">${E(c.name)}</h3>
-        <p class="text-xs text-slate-400">${R[c.rar].n} · ${c.kind==='c'?'Personnage':'Franchise'} · Prix de vente au jeu : <b class="text-emerald-300">${sellP(id,g).toLocaleString()} AC</b></p>
-        <p class="text-xs text-slate-300 mt-1.5 leading-relaxed">${E(c.desc||cleanDesc('',c.kind))}</p>
-      </div>
+    <div class="space-y-2.5 text-sm flex-1 w-full min-w-0">
+      <div><h3 class="font-bold text-base text-white">${E(c.name)}</h3>
+      <p class="text-xs text-slate-400">${R[c.rar].n}${r!==c.rar?` <span class="text-amber-300">(cote du marché : ${R[r].n})</span>`:''} · ${KL[c.kind]||'Carte'} · Prix de revente : <b class="text-emerald-300">${sellP(id,g).toLocaleString()} AC</b></p>
+      <div class="scroll-y mt-2 text-xs text-slate-300 leading-relaxed">${E(c.desc||'')}</div></div>
       ${marketAnalysisHTML(id,g)}
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
         <button class="btn w-full" data-a="sell1" data-p="${k}">Vendre 1 (${sellP(id,g).toLocaleString()} AC)</button>
         <button class="btn2 w-full" data-a="listForm" data-p="${k}">🔨 Mettre aux enchères</button>
         ${g?'':`<button class="btn2 w-full" data-a="toGrade" data-p="${k}">🔎 Faire grader (100 AC)</button>`}
-        <button class="btn2 w-full" data-a="useAvCard" data-p="${id}">🖼️ Utiliser en photo de profil</button>
+        <button class="btn2 w-full" data-a="useAvCard" data-p="${id}">🖼️ Photo de profil</button>
         <button class="btn2 w-full" data-a="wish" data-p="${id}">${w?'💔 Retirer Wishlist':'❤️ Ajouter Wishlist'}</button>
-        <button class="btn2 w-full" data-a="master" data-p="${id}">⭐ Définir Carte maîtresse</button>
-      </div>
-      <div class="flex gap-2 pt-1">
-        <select class="flex-1" data-c="toAlbum" data-p="${k}">
-          <option value="">Ajouter à un album…</option>
-          ${Object.keys(U().albums||{}).map(a=>`<option>${E(a)}</option>`).join('')}
-        </select>
-        <button class="btn2" data-a="close">Fermer</button>
-      </div>
-    </div>
-  </div>`);
+        <button class="btn2 w-full" data-a="master" data-p="${id}">⭐ Carte maîtresse</button></div>
+      <div class="flex gap-2 pt-1"><select class="flex-1" data-c="toAlbum" data-p="${k}"><option value="">Ajouter à un album…</option>${Object.keys(U().albums||{}).map(a=>`<option>${E(a)}</option>`).join('')}</select><button class="btn2" data-a="close">Fermer</button></div>
+    </div></div>`);
 };
-
-A.useAvCard=async id=>{
-  const c=cd(id);
-  if(!c.img)return toast('Cette carte n\'a pas d\'illustration disponible');
-  await saveU({avImg:c.img,avCard:id});
-  toast('Photo de profil mise à jour avec '+c.name);
-};
-A.toAlbum=async(a,el)=>{
-  if(!a)return;
-  const k=el.dataset.p,al=cl(U().albums||{});
-  al[a]=[...new Set([...(al[a]||[]),k])];
-  await saveU({albums:al});
-  toast('Carte ajoutée à l\'album '+a);
-};
+A.useAvCard=async id=>{const c=cd(id);if(!c.img)return toast('Cette carte n\'a pas d\'illustration');await saveU({avImg:c.img,avCard:id});toast('Photo de profil mise à jour')};
+A.toAlbum=async(a,el)=>{if(!a)return;const k=el.dataset.p,al=cl(U().albums||{});al[a]=[...new Set([...(al[a]||[]),k])];await saveU({albums:al});toast('Carte ajoutée à l\'album '+a)};
 A.sell1=async k=>{
-  const {id,g}=parse(k),inv=cl(U().inv||{});
-  if(!subC(inv,id,g))return;
-  const p=sellP(id,g);
-  await saveInv(inv,{ac:(U().ac||0)+p,earned:(U().earned||0)+p});
-  toast(`+${p.toLocaleString()} AC`);
-  if(cnt(inv,id,g))A.show(k);
-  else closeM();
+  const {id,g}=parse(k),inv=cl(U().inv||{});if(!subC(inv,id,g))return;
+  const p=sellP(id,g);await saveInv(inv,{ac:(U().ac||0)+p,earned:(U().earned||0)+p});toast(`+${p.toLocaleString()} AC`);
+  if(cnt(inv,id,g))A.show(k);else closeM();
 };
 A.wish=async id=>{
-  const w=(U().wish||[]).includes(id);
-  await saveU({wish:w?arrayRemove(id):arrayUnion(id)});
-  if(S.tab==='codex')fillCodex();
-  else if(!$('#ov').classList.contains('hidden'))A.show(id+'|0');
+  const w=(U().wish||[]).includes(id);await saveU({wish:w?arrayRemove(id):arrayUnion(id)});
+  if(S.tab==='codex')fillCodex();else if(!$('#ov').classList.contains('hidden'))A.show(id+'|0');
 };
 A.master=async id=>{await saveU({master:id});toast('Carte maîtresse définie !')};
 A.toGrade=k=>{S.G=k;closeM();A.go('grade')};
 
-/* ============ 9. ATELIER DE GRADATION AVEC RECHERCHE & FILTRES ============ */
+/* ============ 10. GRADATION ============ */
 function gradeListFiltered(){
   const GF=S.GF;
-  return stacks(U().inv).filter(s=>{
-    if(s.g)return false;
-    const c=cd(s.id);
-    if(GF.q&&!c.name.toLowerCase().includes(GF.q.toLowerCase()))return false;
-    if(GF.r&&c.rar!==GF.r)return false;
-    return true;
-  }).sort((a,b)=>{
-    if(GF.s==='qty')return b.n-a.n||sellP(b.id,0)-sellP(a.id,0);
-    if(GF.s==='name')return cd(a.id).name.localeCompare(cd(b.id).name);
-    return sellP(b.id,0)-sellP(a.id,0);
-  });
+  return stacks(U().inv).filter(s=>{if(s.g)return false;const c=cd(s.id);if(GF.q&&!c.name.toLowerCase().includes(GF.q.toLowerCase()))return false;if(GF.r&&c.rar!==GF.r)return false;return true})
+  .sort((a,b)=>GF.s==='qty'?b.n-a.n||sellP(b.id,0)-sellP(a.id,0):GF.s==='name'?cd(a.id).name.localeCompare(cd(b.id).name):sellP(b.id,0)-sellP(a.id,0));
 }
-
 function vGrade(){
-  const allUngraded=stacks(U().inv).filter(s=>!s.g);
-  const sel=S.G&&allUngraded.find(s=>keyOf(s)===S.G);
-  const GF=S.GF;
-  return `<div class="grid md:grid-cols-3 gap-5">
-    <div class="glass p-4 text-center space-y-3 h-fit">
-      <h2 class="font-bold text-base text-white">🔎 Atelier de gradation PSA</h2>
-      ${sel?`<div id="gc" class="relative w-44 mx-auto">${card(cd(sel.id))}</div>
-        <p class="text-xs text-slate-300 font-medium">${E(cd(sel.id).name)}</p>
-        <p class="text-xs text-slate-400">Coût : <b class="text-white">100 AC</b> · Une note PSA 9 (x5) ou PSA 10 (x15) multiplie fortement la valeur de revente de ta carte.</p>
-        <button class="btn w-full" data-a="gradeIt" ${(U().ac||0)<100?'disabled':''}>Lancer l'expertise (100 AC)</button>`
-      :'<p class="text-xs text-slate-400 py-12">Sélectionne une carte non gradée dans la liste pour la faire certifier →</p>'}
-    </div>
-    <div class="md:col-span-2 space-y-3">
-      <div class="glass p-3 flex flex-wrap gap-2 items-center">
-        <input placeholder="Rechercher une carte à grader…" value="${E(GF.q)}" data-i="gq" class="flex-1 min-w-[160px]">
-        <select data-c="gr">
-          <option value="">Toutes raretés</option>
-          ${RO.map(k=>`<option value="${k}" ${GF.r===k?'selected':''}>${R[k].n}</option>`).join('')}
-        </select>
-        <select data-c="gs">
-          <option value="val" ${GF.s==='val'?'selected':''}>Trier : Valeur ↓</option>
-          <option value="qty" ${GF.s==='qty'?'selected':''}>Trier : Quantité ↓</option>
-          <option value="name" ${GF.s==='name'?'selected':''}>Trier : Nom A-Z</option>
-        </select>
-      </div>
-      <div id="ggrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 content-start"></div>
-    </div>
-  </div>`;
+  const all=stacks(U().inv).filter(s=>!s.g),sel=S.G&&all.find(s=>keyOf(s)===S.G),GF=S.GF;
+  return `<div class="grid md:grid-cols-3 gap-5"><div class="glass p-4 text-center space-y-3 h-fit"><h2 class="font-bold text-base text-white">Atelier de gradation PSA</h2>
+    ${sel?`<div id="gc" class="relative w-44 mx-auto">${card(cd(sel.id))}</div><p class="text-xs text-slate-300 font-medium">${E(cd(sel.id).name)}</p>
+      <p class="text-xs text-slate-400">Coût : <b class="text-white">100 AC</b> · Une note PSA 9 (x5) ou PSA 10 (x15) multiplie fortement la valeur de ta carte.</p>
+      <button class="btn w-full" data-a="gradeIt" ${(U().ac||0)<100?'disabled':''}>Lancer l'expertise (100 AC)</button>`:'<p class="text-xs text-slate-400 py-12">Sélectionne une carte non gradée dans la liste →</p>'}</div>
+    <div class="md:col-span-2 space-y-3"><div class="glass p-3 flex flex-wrap gap-2 items-center">
+      <input placeholder="Rechercher une carte à grader…" value="${E(GF.q)}" data-i="gq" class="flex-1 min-w-[160px]">
+      <select data-c="gr"><option value="">Toutes raretés</option>${RO.map(k=>`<option value="${k}" ${GF.r===k?'selected':''}>${R[k].n}</option>`).join('')}</select>
+      <select data-c="gs"><option value="val" ${GF.s==='val'?'selected':''}>Trier : Valeur ↓</option><option value="qty" ${GF.s==='qty'?'selected':''}>Trier : Quantité ↓</option><option value="name" ${GF.s==='name'?'selected':''}>Trier : Nom A-Z</option></select></div>
+      <div id="ggrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 content-start"></div></div></div>`;
 }
-
-function gradeUpd(){
-  const ggrid=$('#ggrid');
-  if(!ggrid)return;
-  const L=gradeListFiltered();
-  ggrid.innerHTML=L.map(s=>tile(s,'pickG',S.G===keyOf(s))).join('')||'<p class="col-span-full text-xs text-slate-500 py-6 text-center">Aucune carte non gradée trouvée.</p>';
-}
-A.gq=v=>{S.GF.q=v;gradeUpd()};
-A.gr=v=>{S.GF.r=v;gradeUpd()};
-A.gs=v=>{S.GF.s=v;gradeUpd()};
-A.pickG=k=>{S.G=k;render()};
+function gradeUpd(){const g=$('#ggrid');if(!g)return;const L=gradeListFiltered();g.innerHTML=L.map(s=>tile(s,'pickG',S.G===keyOf(s))).join('')||'<p class="col-span-full text-xs text-slate-500 py-6 text-center">Aucune carte non gradée trouvée.</p>'}
+A.gq=v=>{S.GF.q=v;gradeUpd()};A.gr=v=>{S.GF.r=v;gradeUpd()};A.gs=v=>{S.GF.s=v;gradeUpd()};A.pickG=k=>{S.G=k;render()};
 A.gradeIt=async()=>{
-  const {id}=parse(S.G),inv=cl(U().inv||{});
-  if((U().ac||0)<100||!subC(inv,id,0))return;
-  let r=Math.random()*100,g=1;
-  for(;g<10;g++){if((r-=GW[g])<0)break}
-  addC(inv,id,g);
-  S.busy=true;
-  $('#gc')?.insertAdjacentHTML('beforeend','<div class="scan"></div>');
+  const {id}=parse(S.G),inv=cl(U().inv||{});if((U().ac||0)<100||!subC(inv,id,0))return;
+  let r=Math.random()*100,g=1;for(;g<10;g++){if((r-=GW[g])<0)break}
+  addC(inv,id,g);S.busy=true;$('#gc')?.insertAdjacentHTML('beforeend','<div class="scan"></div>');
   await saveInv(inv,{ac:(U().ac||0)-100,gradedCount:(U().gradedCount||0)+1});
-  setTimeout(()=>{
-    S.busy=false;
-    S.G=null;
-    modal(`<div class="glass bg-[#11141d] p-5 text-center space-y-3 w-64">
-      <div class="text-xs font-bold uppercase tracking-wider text-indigo-400">Certification terminée</div>
-      <h3 class="text-2xl font-extrabold text-white">PSA ${g} — ${GN[g]}</h3>
-      ${slab(cd(id),g)}
-      <p class="text-xs text-slate-300">Prix de vente au jeu : <b class="text-amber-300">${sellP(id,g).toLocaleString()} AC</b></p>
-      <button class="btn w-full" data-a="close">Super !</button>
-    </div>`);
-    render();
-  },2200);
+  setTimeout(()=>{S.busy=false;S.G=null;
+    modal(`<div class="glass bg-[#11141d] p-5 text-center space-y-3 w-64"><div class="text-xs font-bold uppercase tracking-wider text-indigo-400">Certification terminée</div><h3 class="text-xl font-extrabold text-white">PSA ${g} — ${GN[g]}</h3>${slab(cd(id),g)}<p class="text-xs text-slate-300">Prix de revente : <b class="text-amber-300">${sellP(id,g).toLocaleString()} AC</b></p><button class="btn w-full" data-a="close">Super !</button></div>`);render()},2200);
 };
 
-/* ============ 10. CODEX & COMPTEUR PAR RARETÉ EN HAUT ============ */
-const vCodex=()=>`<div class="space-y-4">
-  <div id="codex-stats" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2"></div>
-  <div class="glass p-3 flex gap-2 flex-wrap items-center">
-    <input placeholder="Rechercher un personnage ou anime…" value="${E(S.CQ)}" data-i="cq" class="flex-1 min-w-[180px]">
-    <select data-c="crr">
-      <option value="">Toutes raretés</option>
-      ${RO.map(k=>`<option value="${k}" ${S.CR===k?'selected':''}>${R[k].n}</option>`).join('')}
-    </select>
-    <label class="text-xs flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-white/5 cursor-pointer">
-      <input type="checkbox" ${S.CW?'checked':''} data-c="cw"> ❤️ Wishlist uniquement
-    </label>
-  </div>
-  <div id="cg" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-3"></div>
-  <div class="text-center pt-2"><button id="codex-more" class="btn2" data-a="moreC">Afficher plus</button></div>
-</div>`;
-
-A.cq=v=>{S.CQ=v;S.CN=60;fillCodex()};
-A.crr=v=>{S.CR=v;S.CN=60;fillCodex()};
-A.cw=(v,el)=>{S.CW=el.checked;S.CN=60;fillCodex()};
-A.moreC=()=>{S.CN+=60;fillCodex()};
-
+/* ============ 11. CODEX ============ */
+const vCodex=()=>`<div class="space-y-4"><div id="codex-stats" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2"></div>
+  <div class="glass p-3 flex gap-2 flex-wrap items-center"><input placeholder="Rechercher un personnage, une œuvre ou une musique…" value="${E(S.CQ)}" data-i="cq" class="flex-1 min-w-[180px]">
+  <select data-c="crr"><option value="">Toutes raretés</option>${RO.map(k=>`<option value="${k}" ${S.CR===k?'selected':''}>${R[k].n}</option>`).join('')}</select>
+  <label class="text-xs flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-white/5 cursor-pointer"><input type="checkbox" ${S.CW?'checked':''} data-c="cw"> ❤️ Wishlist uniquement</label></div>
+  <div id="cg" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-3"></div><div class="text-center pt-2"><button id="codex-more" class="btn2" data-a="moreC">Afficher plus</button></div></div>`;
+A.cq=v=>{S.CQ=v;S.CN=60;fillCodex()};A.crr=v=>{S.CR=v;S.CN=60;fillCodex()};A.cw=(v,el)=>{S.CW=el.checked;S.CN=60;fillCodex()};A.moreC=()=>{S.CN+=60;fillCodex()};
 function fillCodex(){
-  const inv=U().inv||{},w=U().wish||[],allAvail=avail();
-  const stEl=$('#codex-stats'),cgEl=$('#cg'),moreBtn=$('#codex-more');
-  if(!stEl||!cgEl)return;
-
-  const totalOwned=allAvail.filter(p=>inv[p.id]).length;
-  const rarBoxes=RO.map(k=>{
-    const tot=allAvail.filter(p=>p.rar===k).length;
-    const own=allAvail.filter(p=>p.rar===k&&inv[p.id]).length;
-    return `<div class="glass p-2.5 text-center border-t-2" style="border-top-color:${R[k].c}">
-      <div class="text-[11px] font-semibold" style="color:${R[k].c}">${R[k].n}</div>
-      <div class="text-sm font-bold text-white mt-0.5">${own} <span class="text-xs font-normal text-slate-400">/ ${tot}</span></div>
-    </div>`;
-  }).join('');
-  stEl.innerHTML=`<div class="glass p-2.5 text-center border-t-2 border-indigo-500">
-    <div class="text-[11px] font-semibold text-indigo-300">Total Codex</div>
-    <div class="text-sm font-bold text-white mt-0.5">${totalOwned} <span class="text-xs font-normal text-slate-400">/ ${allAvail.length}</span></div>
-  </div>`+rarBoxes;
-
-  const L=allAvail.filter(p=>
-    (!S.CQ||p.name.toLowerCase().includes(S.CQ.toLowerCase()))&&
-    (!S.CR||p.rar===S.CR)&&
-    (!S.CW||w.includes(p.id))
-  ).sort((a,b)=>RO.indexOf(b.rar)-RO.indexOf(a.rar)||(b.fav||0)-(a.fav||0));
-
-  cgEl.innerHTML=L.slice(0,S.CN).map(p=>`<div class="relative">
-    <div class="${inv[p.id]?'':'grayscale opacity-45 hover:opacity-80 transition'}">${card(p)}</div>
-    <button class="absolute bottom-11 right-1.5 z-10 text-base bg-black/70 rounded-full w-7 h-7 flex items-center justify-center" data-a="wish" data-p="${p.id}">${w.includes(p.id)?'❤️':'🤍'}</button>
-  </div>`).join('')||'<p class="col-span-full text-sm text-slate-500 py-8 text-center">Aucune carte trouvée.</p>';
-
-  if(moreBtn)moreBtn.style.display=L.length>S.CN?'inline-flex':'none';
+  const inv=U().inv||{},w=U().wish||[],al=avail(),st=$('#codex-stats'),cg=$('#cg'),mb=$('#codex-more');if(!st||!cg)return;
+  const owned=al.filter(p=>inv[p.id]).length;
+  st.innerHTML=`<div class="glass p-2.5 text-center border-t-2 border-indigo-500"><div class="text-[11px] font-semibold text-indigo-300">Total Codex</div><div class="text-sm font-bold text-white mt-0.5">${owned} <span class="text-xs font-normal text-slate-400">/ ${al.length}</span></div></div>`+
+  RO.map(k=>{const t=al.filter(p=>p.rar===k).length,o=al.filter(p=>p.rar===k&&inv[p.id]).length;return `<div class="glass p-2.5 text-center border-t-2" style="border-top-color:${R[k].c}"><div class="text-[11px] font-semibold" style="color:${R[k].c}">${R[k].n}</div><div class="text-sm font-bold text-white mt-0.5">${o} <span class="text-xs font-normal text-slate-400">/ ${t}</span></div></div>`}).join('');
+  const q=S.CQ.toLowerCase();
+  const L=al.filter(p=>(!q||p.name.toLowerCase().includes(q))&&(!S.CR||p.rar===S.CR)&&(!S.CW||w.includes(p.id))).sort((a,b)=>RO.indexOf(b.rar)-RO.indexOf(a.rar)||(b.fav||0)-(a.fav||0));
+  cg.innerHTML=L.slice(0,S.CN).map(p=>`<div class="relative"><div class="${inv[p.id]?'':'grayscale opacity-45 hover:opacity-80 transition'}">${card(p)}</div><button class="absolute bottom-12 right-1.5 z-10 text-base bg-black/70 rounded-full w-7 h-7 flex items-center justify-center" data-a="wish" data-p="${p.id}">${w.includes(p.id)?'❤️':'🤍'}</button></div>`).join('')||'<p class="col-span-full text-sm text-slate-500 py-8 text-center">Aucune carte trouvée.</p>';
+  if(mb)mb.style.display=L.length>S.CN?'inline-flex':'none';
 }
 
-/* ============ 11. HÔTEL DES ENCHÈRES (DURÉES 5m, 10m, 1h, 3h, 5h, 12h) ============ */
-const vAuc=()=>`<div class="space-y-4">
-  <div class="flex items-center justify-between gap-3 flex-wrap">
-    <div>
-      <h2 class="font-bold text-lg text-white">🔨 Hôtel des enchères</h2>
-      <p class="text-xs text-slate-400">Enchéris en temps réel sur les cartes des autres joueurs</p>
-    </div>
-    <button class="btn" data-a="listForm">＋ Mettre une carte aux enchères</button>
-  </div>
-  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
-    ${S.auc.sort((a,b)=>a.end-b.end).map(a=>`<div class="glass p-3 space-y-2 text-xs flex flex-col justify-between">
-      <div>${slab(cd(a.card),a.grade)}</div>
-      <div class="space-y-1 pt-1">
-        <div class="text-slate-400">Vendeur : <b class="text-slate-200">${a.seller===uid?'Toi':E(a.sellerName)}</b></div>
-        <div>Mise actuelle : <b class="text-amber-300">${(a.bid||0).toLocaleString()} AC</b> ${a.bidder===uid?'<span class="text-emerald-400">(toi)</span>':a.bidderName?'('+E(a.bidderName)+')':''}</div>
-        <div class="text-slate-400">Fin dans : <b class="text-white" data-end="${a.end}"></b></div>
-        ${a.seller===uid
-          ?'<div class="text-[11px] text-indigo-300 pt-1">Ta vente est en cours</div>'
-          :`<div class="flex gap-1 pt-1">
-              <input id="b${a.id}" type="number" class="w-20 flex-1" value="${a.bidder?Math.ceil(a.bid*1.1)+1:a.bid}">
-              <button class="btn2 px-2.5" data-a="bid" data-p="${a.id}">Miser</button>
-            </div>`}
-      </div>
-    </div>`).join('')||'<p class="text-sm text-slate-500 col-span-full py-10 text-center">Aucune enchère active pour le moment.</p>'}
-  </div>
-</div>`;
-
+/* ============ 12. ENCHÈRES : EN COURS & TOP 100 DES VENTES ============ */
+function vAuc(){
+  const head=`<div class="flex items-center justify-between gap-3 flex-wrap"><div><h2 class="font-bold text-lg text-white">Hôtel des enchères</h2><p class="text-xs text-slate-400">Enchéris en temps réel sur les cartes des autres joueurs</p></div><button class="btn" data-a="listForm">＋ Mettre une carte aux enchères</button></div>
+  <div class="flex gap-2 border-b border-white/10 pb-2.5"><button class="tab ${S.aucTab==='live'?'on':''}" data-a="aucGo" data-p="live">Enchères en cours</button><button class="tab ${S.aucTab==='top'?'on':''}" data-a="aucGo" data-p="top">🏆 Top 100 Ventes Récentes</button></div>`;
+  if(S.aucTab==='top')return `<div class="space-y-4">${head}${vTop()}</div>`;
+  return `<div class="space-y-4">${head}<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
+    ${[...S.auc].sort((a,b)=>a.end-b.end).map(a=>`<div class="glass p-3 space-y-2 text-xs flex flex-col justify-between"><div>${slab(cd(a.card),a.grade)}</div>
+      <div class="space-y-1 pt-1"><div class="text-slate-400">Vendeur : <b class="text-slate-200">${a.seller===uid?'Toi':E(a.sellerName)}</b></div>
+      <div>Mise actuelle : <b class="text-amber-300">${(a.bid||0).toLocaleString()} AC</b></div>
+      <div class="text-slate-400">Meilleur enchérisseur : ${a.bidderName?`<b class="${a.bidder===uid?'text-emerald-400':'text-white'}">${a.bidder===uid?'Toi':E(a.bidderName)}</b>`:'<span class="italic">Aucune offre</span>'}</div>
+      <div class="text-slate-400">Fin dans : <b class="text-white" data-end="${a.end}"></b></div>
+      ${a.seller===uid?'<div class="text-[11px] text-indigo-300 pt-1">Ta vente est en cours</div>':`<div class="flex gap-1 pt-1"><input id="b${a.id}" type="number" class="w-20 flex-1" value="${a.bidder?Math.ceil(a.bid*1.1)+1:a.bid}"><button class="btn2 px-2.5" data-a="bid" data-p="${a.id}">Miser</button></div>`}</div></div>`).join('')||'<p class="text-sm text-slate-500 col-span-full py-10 text-center">Aucune enchère active pour le moment.</p>'}</div></div>`;
+}
+function vTop(){
+  const L=(S.allAuc||[]).filter(a=>a.status==='closed'&&a.bidder).sort((a,b)=>(b.bid||0)-(a.bid||0)).slice(0,100);
+  if(!L.length)return '<p class="text-sm text-slate-500 py-10 text-center">Aucune vente terminée pour le moment.</p>';
+  return `<div class="space-y-2">${L.map((a,i)=>`<div class="glass p-2.5 flex items-center gap-3 text-xs">
+    <span class="w-7 text-center font-bold ${i<3?'text-amber-300':'text-slate-500'}">${i+1}</span><div class="w-16 shrink-0">${slab(cd(a.card),a.grade||0)}</div>
+    <div class="flex-1 min-w-0 space-y-0.5"><div class="font-semibold text-white truncate text-sm">${E(cd(a.card).name)}</div>
+      <div class="text-slate-400">${a.grade?`<span class="text-indigo-300 font-semibold">PSA ${a.grade}</span> · `:''}Acheteur : <b class="text-emerald-300">${E(a.bidderName||'—')}</b> · Vendeur : <b class="text-slate-200">${E(a.sellerName||'—')}</b></div>
+      <div class="text-[10px] text-slate-500">${a.closedAt?new Date(a.closedAt).toLocaleString('fr-FR'):'Date inconnue'}</div></div>
+    <div class="text-right"><div class="text-base font-bold text-amber-300">${(a.bid||0).toLocaleString()} AC</div></div></div>`).join('')}</div>`;
+}
+A.aucGo=t=>{S.aucTab=t;render()};
 A.bid=async aid=>{
-  const v=+$('#b'+aid).value;
-  let prev=null,nm='';
+  const v=+$('#b'+aid).value;let prev=null,nm='';
   try{
     await runTransaction(db,async tx=>{
       const ar=doc(db,'auctions',aid),a=(await tx.get(ar)).data();
       if(!a||a.status!=='open'||a.end<=Date.now())throw 'Enchère terminée';
       if(a.seller===uid)throw 'Impossible de miser sur ta propre vente';
       if((v<=a.bid&&a.bidder)||v<a.bid)throw 'Mise trop basse';
-      const mr=ME(),ms=await tx.get(mr);
-      let ac=ms.data().ac,pr,ps;
+      const mr=ME(),ms=await tx.get(mr);let ac=ms.data().ac||0,pr,ps;
       if(a.bidder&&a.bidder!==uid){pr=doc(db,'users',a.bidder);ps=await tx.get(pr)}
       if(a.bidder===uid)ac+=a.bid;
       if(ac<v)throw 'AnimeCoins insuffisants';
-      tx.update(mr,{ac:ac-v});
-      if(ps)tx.update(pr,{ac:(ps.data().ac||0)+a.bid});
-      tx.update(ar,{bid:v,bidder:uid,bidderName:U().name});
-      prev=ps?a.bidder:null;
-      nm=cd(a.card).name;
+      tx.update(mr,{ac:ac-v});if(ps)tx.update(pr,{ac:(ps.data().ac||0)+a.bid});
+      tx.update(ar,{bid:v,bidder:uid,bidderName:U().name});prev=ps?a.bidder:null;nm=cd(a.card).name;
     });
     toast('Mise placée avec succès !');
-    if(prev)notif(prev,`⚠️ ${U().name} a surenchéri sur ${nm} (${v} AC) — ta mise t'a été remboursée.`);
+    if(prev)notif(prev,`⚠️ ${U().name} a surenchéri sur ${nm} (${v} AC) — ta mise t'a été remboursée.`,'col');
   }catch(e){fail(e)}
 };
-
 A.listForm=k=>{
-  closeM();
-  const L=stacks(U().inv);
-  if(!L.length)return toast('Tu n\'as aucune carte à vendre');
-  const selKey=k&&L.some(s=>keyOf(s)===k)?k:keyOf(L[0]);
-  const {id,g}=parse(selKey);
-  const mkt=getCardMarketStats(id).avgByGrade[g];
-  const defStart=mkt?mkt.avg:sellP(id,g);
-  modal(`<div class="glass bg-[#11141d] p-4 sm:p-5 space-y-3 text-sm max-w-lg w-full">
-    <h3 class="font-bold text-base text-white">🔨 Mettre une carte aux enchères</h3>
-    <select id="lc" class="w-full" data-c="aucCardChange">
-      ${L.map(s=>`<option value="${keyOf(s)}" ${keyOf(s)===selKey?'selected':''}>${E(cd(s.id).name)} (${R[cd(s.id).rar].n}${s.g?' · PSA '+s.g:''}) x${s.n}</option>`).join('')}
-    </select>
+  closeM();const L=stacks(U().inv);if(!L.length)return toast('Tu n\'as aucune carte à vendre');
+  const selKey=k&&L.some(s=>keyOf(s)===k)?k:keyOf(L[0]),{id,g}=parse(selKey),mkt=getCardMarketStats(id).avgByGrade[g];
+  modal(`<div class="glass bg-[#11141d] p-4 sm:p-5 space-y-3 text-sm max-w-lg w-full"><h3 class="font-bold text-base text-white">Mettre une carte aux enchères</h3>
+    <select id="lc" class="w-full" data-c="aucCardChange">${L.map(s=>`<option value="${keyOf(s)}" ${keyOf(s)===selKey?'selected':''}>${E(cd(s.id).name)} (${R[cd(s.id).rar].n}${s.g?' · PSA '+s.g:''}) x${s.n}</option>`).join('')}</select>
     <div id="auc-analysis">${marketAnalysisHTML(id,g)}</div>
-    <div class="grid grid-cols-2 gap-3">
-      <div>
-        <label class="block text-xs text-slate-400 mb-1">Prix de départ (AC)</label>
-        <input id="lp" type="number" value="${defStart}" class="w-full">
-      </div>
-      <div>
-        <label class="block text-xs text-slate-400 mb-1">Durée de l'enchère</label>
-        <select id="ld" class="w-full">
-          <option value="300">5 min</option>
-          <option value="600">10 min</option>
-          <option value="3600">1 h</option>
-          <option value="10800">3 h</option>
-          <option value="18000">5 h</option>
-          <option value="43200">12 h</option>
-        </select>
-      </div>
-    </div>
-    <div class="flex gap-2 pt-1">
-      <button class="btn flex-1" data-a="listIt">Publier l'enchère</button>
-      <button class="btn2" data-a="close">Annuler</button>
-    </div>
-  </div>`);
+    <div class="grid grid-cols-2 gap-3"><div><label class="block text-xs text-slate-400 mb-1">Prix de départ (AC)</label><input id="lp" type="number" value="${mkt?mkt.avg:sellP(id,g)}" class="w-full"></div>
+    <div><label class="block text-xs text-slate-400 mb-1">Durée</label><select id="ld" class="w-full"><option value="300">5 min</option><option value="600">10 min</option><option value="3600">1 h</option><option value="10800">3 h</option><option value="18000">5 h</option><option value="43200">12 h</option></select></div></div>
+    <div class="flex gap-2 pt-1"><button class="btn flex-1" data-a="listIt">Publier l'enchère</button><button class="btn2" data-a="close">Annuler</button></div></div>`);
 };
-
-A.aucCardChange=v=>{
-  const {id,g}=parse(v);
-  const an=$('#auc-analysis'),lp=$('#lp');
-  if(an)an.innerHTML=marketAnalysisHTML(id,g);
-  const mkt=getCardMarketStats(id).avgByGrade[g];
-  if(lp)lp.value=mkt?mkt.avg:sellP(id,g);
-};
-
+A.aucCardChange=v=>{const {id,g}=parse(v),an=$('#auc-analysis'),lp=$('#lp');if(an)an.innerHTML=marketAnalysisHTML(id,g);const m=getCardMarketStats(id).avgByGrade[g];if(lp)lp.value=m?m.avg:sellP(id,g)};
 A.listIt=async()=>{
   const {id,g}=parse($('#lc').value),price=Math.max(1,+$('#lp').value||1),dur=+$('#ld').value;
   try{
     await runTransaction(db,async tx=>{
-      const us=await tx.get(ME()),inv=cl(us.data().inv||{});
-      if(!subC(inv,id,g))throw 'Carte indisponible';
+      const us=await tx.get(ME()),inv=cl(us.data().inv||{});if(!subC(inv,id,g))throw 'Carte indisponible';
       tx.update(ME(),{inv,val:invVal(inv)});
-      tx.set(doc(collection(db,'auctions')),{
-        card:id,grade:g,seller:uid,sellerName:U().name,
-        bid:price,bidder:null,bidderName:'',end:Date.now()+dur*1000,status:'open'
-      });
+      tx.set(doc(collection(db,'auctions')),{card:id,grade:g,seller:uid,sellerName:U().name,bid:price,bidder:null,bidderName:'',end:Date.now()+dur*1000,status:'open'});
     });
-    closeM();
-    A.go('auc');
-    toast('Enchère publiée !');
+    closeM();S.aucTab='live';A.go('auc');toast('Enchère publiée !');
   }catch(e){fail(e)}
 };
-
 async function settle(aid){
   try{
     let info;
     await runTransaction(db,async tx=>{
-      const ar=doc(db,'auctions',aid),a=(await tx.get(ar)).data();
-      info=null;
+      const ar=doc(db,'auctions',aid),a=(await tx.get(ar)).data();info=null;
       if(!a||a.status!=='open'||a.end>Date.now())return;
-      const sr=doc(db,'users',a.seller),ss=await tx.get(sr);
-      let br,bs;
+      const sr=doc(db,'users',a.seller),ss=await tx.get(sr);let br,bs;
       if(a.bidder){br=doc(db,'users',a.bidder);bs=await tx.get(br)}
+      let finalBidder=a.bidder;
       if(a.bidder&&bs?.exists()){
-        const si=ss.data();
-        tx.update(sr,{ac:(si.ac||0)+a.bid,earned:(si.earned||0)+a.bid});
-        const inv=cl(bs.data().inv||{});
-        addC(inv,a.card,a.grade);
-        tx.update(br,{inv,val:invVal(inv)});
+        const si=ss.data();tx.update(sr,{ac:(si.ac||0)+a.bid,earned:(si.earned||0)+a.bid});
+        const inv=cl(bs.data().inv||{});addC(inv,a.card,a.grade);tx.update(br,{inv,val:invVal(inv)});
       }else{
-        const inv=cl(ss.data().inv||{});
-        addC(inv,a.card,a.grade);
-        tx.update(sr,{inv,val:invVal(inv)});
+        finalBidder=null;const inv=cl(ss.data().inv||{});addC(inv,a.card,a.grade);tx.update(sr,{inv,val:invVal(inv)});
       }
-      tx.update(ar,{status:'closed'});
-      info=a;
+      tx.update(ar,{status:'closed',closedAt:Date.now(),...(finalBidder?{}:{bidder:null,bidderName:''})});
+      info={...a,bidder:finalBidder};
     });
     if(info){
       const n=cd(info.card).name;
-      if(info.bidder){
-        notif(info.bidder,`🏆 Tu as remporté ${n} aux enchères pour ${info.bid} AC !`);
-        notif(info.seller,`💰 ${n} a été vendu ${info.bid} AC à ${info.bidderName} !`);
-      }else{
-        notif(info.seller,`⏱ ${n} n'a pas trouvé preneur : la carte t'a été restituée.`);
-      }
+      if(info.bidder){notif(info.bidder,`🏆 Tu as remporté ${n} aux enchères pour ${info.bid} AC !`,'col');notif(info.seller,`💰 ${n} a été vendu ${info.bid} AC à ${info.bidderName} !`,'col')}
+      else notif(info.seller,`${n} n'a pas trouvé preneur : la carte t'a été restituée.`,'col');
     }
   }catch(e){}
 }
-
 function tick(){
-  const now=Date.now();
-  const cd2=$('#cd');
-  if(cd2&&S.u){
-    const {p,l,iv}=curPacks();
-    cd2.textContent=p>=10?'— (stock plein)':fmt((iv-(now-l))/1e3);
-    const pk=$('#pk');if(pk)pk.textContent=p;
-  }
+  const now=Date.now(),c2=$('#cd');
+  if(c2&&S.u){const {p,l,iv}=curPacks();c2.textContent=p>=10?'— (stock plein)':fmt((iv-(now-l))/1e3);const pk=$('#pk');if(pk)pk.textContent=p}
   document.querySelectorAll('[data-end]').forEach(e=>e.textContent=fmt(Math.max(0,(e.dataset.end-now)/1e3)));
-  if(now-(tick.s||0)>5000){
-    tick.s=now;
-    S.auc.filter(a=>a.end<=now).forEach(a=>settle(a.id));
-  }
+  if(now-(tick.s||0)>5000){tick.s=now;S.auc.filter(a=>a.end<=now).forEach(a=>settle(a.id))}
 }
 
-/* ============ 12. ÉCHANGES DIRECTS ENTRE JOUEURS ============ */
+/* ============ 13. ÉCHANGES ============ */
 const T=()=>S.T;
 const sel2list=m=>Object.entries(m).filter(([,n])=>n>0).map(([k,n])=>({...parse(k),n}));
 const sv=l=>l.reduce((a,c)=>a+sellP(c.id,c.g)*c.n,0);
 const cdesc=l=>l.map(c=>`${E(cd(c.id).name)}${c.g?' (PSA '+c.g+')':''} x${c.n}`).join(', ')||'—';
-
 function vTrade(){
   const t=T(),fr=Object.entries(S.fr),mine=stacks(U().inv);
-  const row=x=>`<div class="glass p-3 mb-2 text-xs sm:text-sm flex flex-wrap items-center justify-between gap-2">
-    <div><b>${E(x.fromName)}</b> → <b>${E(x.toName)}</b> : <span class="text-emerald-300">${cdesc(x.offer.cards)}${x.offer.ac?' + '+x.offer.ac+' AC':''}</span> contre <span class="text-rose-300">${cdesc(x.want.cards)}${x.want.ac?' + '+x.want.ac+' AC':''}</span> <span class="text-xs text-slate-400">[${E(x.status)}]</span></div>
-    <div class="flex gap-1.5">
-      ${x.status==='pending'&&x.to===uid?`<button class="btn px-2.5 py-1 text-xs" data-a="tAcc" data-p="${x.id}">Accepter</button><button class="btn2 px-2.5 py-1 text-xs" data-a="tDec" data-p="${x.id}">Refuser</button>`:''}
-      ${x.status==='pending'&&x.from===uid?`<button class="btn2 px-2.5 py-1 text-xs" data-a="tDec" data-p="${x.id}">Annuler</button>`:''}
-    </div>
-  </div>`;
+  const row=x=>`<div class="glass p-3 mb-2 text-xs sm:text-sm flex flex-wrap items-center justify-between gap-2"><div><b>${E(x.fromName)}</b> → <b>${E(x.toName)}</b> : <span class="text-emerald-300">${cdesc(x.offer.cards)}${x.offer.ac?' + '+x.offer.ac+' AC':''}</span> contre <span class="text-rose-300">${cdesc(x.want.cards)}${x.want.ac?' + '+x.want.ac+' AC':''}</span> <span class="text-xs text-slate-400">[${E(x.status)}]</span></div>
+    <div class="flex gap-1.5">${x.status==='pending'&&x.to===uid?`<button class="btn px-2.5 py-1 text-xs" data-a="tAcc" data-p="${x.id}">Accepter</button><button class="btn2 px-2.5 py-1 text-xs" data-a="tDec" data-p="${x.id}">Refuser</button>`:''}${x.status==='pending'&&x.from===uid?`<button class="btn2 px-2.5 py-1 text-xs" data-a="tDec" data-p="${x.id}">Annuler</button>`:''}</div></div>`;
   const all=[...S.trIn,...S.trOut].sort((a,b)=>b.ts-a.ts).slice(0,12);
-  return `<div class="space-y-4">
-    <div>
-      <h3 class="font-bold text-base text-white mb-2">🤝 Offres d'échange & historique</h3>
-      ${all.map(row).join('')||'<p class="text-xs text-slate-500">Aucun échange récent.</p>'}
-    </div>
-    <div class="glass p-3 flex items-center gap-2 flex-wrap">
-      <span class="text-sm font-medium">Nouvel échange avec :</span>
-      <select data-c="tSel">
-        <option value="">— Choisir un ami —</option>
-        ${fr.map(([i,f])=>`<option value="${i}" ${t.to===i?'selected':''}>${E(f.name)} ${online(f)?'🟢':'⚫'}</option>`).join('')}
-      </select>
-      ${fr.length?'':'<span class="text-xs text-slate-400">Ajoute d\'abord un ami dans l\'onglet Social.</span>'}
-    </div>
-    ${t.to&&t.tinv?`<div class="grid md:grid-cols-2 gap-4">
-      <div class="glass p-3 space-y-2">
-        <h3 class="font-bold text-sm text-white">Mon offre</h3>
-        <div class="grid grid-cols-3 sm:grid-cols-4 gap-2 max-h-72 overflow-auto p-1">${mine.map(s=>tileSel(s,'my')).join('')||'<p class="text-xs text-slate-500 col-span-full">Inventaire vide.</p>'}</div>
-        <div class="pt-2 text-xs flex items-center gap-2">+ AnimeCoins : <input type="number" min="0" value="${t.mac}" class="w-28" data-c="tmac"> AC</div>
-      </div>
-      <div class="glass p-3 space-y-2">
-        <h3 class="font-bold text-sm text-white">Demandé à ${E(t.toName)}</h3>
-        <div class="grid grid-cols-3 sm:grid-cols-4 gap-2 max-h-72 overflow-auto p-1">${stacks(t.tinv).map(s=>tileSel(s,'th')).join('')||'<p class="text-xs text-slate-500 col-span-full">Inventaire vide.</p>'}</div>
-        <div class="pt-2 text-xs flex items-center gap-2">+ AnimeCoins : <input type="number" min="0" value="${t.tac}" class="w-28" data-c="ttac"> AC</div>
-      </div>
-    </div>
-    <div class="glass p-3 flex flex-wrap gap-4 items-center justify-between text-sm">
-      <div class="space-x-4">
-        <span>Valeur donnée : <b class="text-emerald-300">${(sv(sel2list(t.my))+t.mac).toLocaleString()} AC</b></span>
-        <span>Valeur reçue : <b class="text-indigo-300">${(sv(sel2list(t.th))+t.tac).toLocaleString()} AC</b></span>
-      </div>
-      <button class="btn" data-a="tSend">Envoyer la proposition</button>
-    </div>`:''}
-  </div>`;
+  return `<div class="space-y-4"><div><h3 class="font-bold text-base text-white mb-2">Offres d'échange & historique</h3>${all.map(row).join('')||'<p class="text-xs text-slate-500">Aucun échange récent.</p>'}</div>
+  <div class="glass p-3 flex items-center gap-2 flex-wrap"><span class="text-sm font-medium">Nouvel échange avec :</span><select data-c="tSel"><option value="">— Choisir un ami —</option>${fr.map(([i,f])=>`<option value="${i}" ${t.to===i?'selected':''}>${E(f.name)} ${online(f)?'🟢':'⚫'}</option>`).join('')}</select>${fr.length?'':'<span class="text-xs text-slate-400">Ajoute d\'abord un ami dans l\'onglet Social.</span>'}</div>
+  ${t.to&&t.tinv?`<div class="grid md:grid-cols-2 gap-4"><div class="glass p-3 space-y-2"><h3 class="font-bold text-sm text-white">Mon offre</h3><div class="grid grid-cols-3 sm:grid-cols-4 gap-2 max-h-72 overflow-auto p-1">${mine.map(s=>tileSel(s,'my')).join('')||'<p class="text-xs text-slate-500 col-span-full">Inventaire vide.</p>'}</div><div class="pt-2 text-xs flex items-center gap-2">+ AnimeCoins : <input type="number" min="0" value="${t.mac}" class="w-28" data-c="tmac"> AC</div></div>
+  <div class="glass p-3 space-y-2"><h3 class="font-bold text-sm text-white">Demandé à ${E(t.toName)}</h3><div class="grid grid-cols-3 sm:grid-cols-4 gap-2 max-h-72 overflow-auto p-1">${stacks(t.tinv).map(s=>tileSel(s,'th')).join('')||'<p class="text-xs text-slate-500 col-span-full">Inventaire vide.</p>'}</div><div class="pt-2 text-xs flex items-center gap-2">+ AnimeCoins : <input type="number" min="0" value="${t.tac}" class="w-28" data-c="ttac"> AC</div></div></div>
+  <div class="glass p-3 flex flex-wrap gap-4 items-center justify-between text-sm"><div class="space-x-4"><span>Valeur donnée : <b class="text-emerald-300">${(sv(sel2list(t.my))+t.mac).toLocaleString()} AC</b></span><span>Valeur reçue : <b class="text-indigo-300">${(sv(sel2list(t.th))+t.tac).toLocaleString()} AC</b></span></div><button class="btn" data-a="tSend">Envoyer la proposition</button></div>`:''}</div>`;
 }
-
-const tileSel=(s,side)=>{
-  const n=T()[side][keyOf(s)]||0;
-  return `<div class="relative ${n?'sel':''}" data-a="tTog" data-p="${side}|${keyOf(s)}|${s.n}"><span class="cnt">${n}/${s.n}</span>${slab(cd(s.id),s.g)}</div>`;
-};
+const tileSel=(s,side)=>{const n=T()[side][keyOf(s)]||0;return `<div class="relative ${n?'sel':''}" data-a="tTog" data-p="${side}|${keyOf(s)}|${s.n}"><span class="cnt">${n}/${s.n}</span>${slab(cd(s.id),s.g)}</div>`};
 A.tSel=async v=>{
   if(!v){S.T={to:'',toName:'',my:{},th:{},mac:0,tac:0,tinv:null};return render()}
-  const s=await getDoc(doc(db,'users',v));
-  if(!s.exists())return toast('Joueur introuvable');
-  S.T={to:v,toName:s.data().name,my:{},th:{},mac:0,tac:0,tinv:s.data().inv||{}};
-  render();
+  const s=await getDoc(doc(db,'users',v));if(!s.exists())return toast('Joueur introuvable');
+  S.T={to:v,toName:s.data().name,my:{},th:{},mac:0,tac:0,tinv:s.data().inv||{}};render();
 };
-A.tTog=p=>{
-  const pts=p.split('|');
-  const side=pts[0],k=pts[1]+'|'+pts[2],m=+pts[3];
-  const cur=S.T[side][k]||0;
-  S.T[side][k]=cur+1>m?0:cur+1;
-  render();
-};
-A.tmac=v=>{S.T.mac=Math.max(0,+v||0);render()};
-A.ttac=v=>{S.T.tac=Math.max(0,+v||0);render()};
+A.tTog=p=>{const pt=p.split('|'),side=pt[0],k=pt[1]+'|'+pt[2],m=+pt[3],cur=S.T[side][k]||0;S.T[side][k]=cur+1>m?0:cur+1;render()};
+A.tmac=v=>{S.T.mac=Math.max(0,+v||0);render()};A.ttac=v=>{S.T.tac=Math.max(0,+v||0);render()};
 A.tSend=async()=>{
   const t=S.T,o=sel2list(t.my),w=sel2list(t.th);
   if(!o.length&&!t.mac&&!w.length&&!t.tac)return toast('La proposition est vide');
   if(t.mac>(U().ac||0))return toast('AnimeCoins insuffisants');
-  await addDoc(collection(db,'trades'),{
-    from:uid,fromName:U().name,to:t.to,toName:t.toName,
-    offer:{cards:o,ac:t.mac},want:{cards:w,ac:t.tac},status:'pending',ts:Date.now()
-  });
-  notif(t.to,`🤝 ${U().name} t'a envoyé une proposition d'échange`);
-  S.T={to:'',toName:'',my:{},th:{},mac:0,tac:0,tinv:null};
-  toast('Proposition envoyée !');
-  render();
+  await addDoc(collection(db,'trades'),{from:uid,fromName:U().name,to:t.to,toName:t.toName,offer:{cards:o,ac:t.mac},want:{cards:w,ac:t.tac},status:'pending',ts:Date.now()});
+  notif(t.to,`🤝 ${U().name} t'a envoyé une proposition d'échange`,'trade');
+  S.T={to:'',toName:'',my:{},th:{},mac:0,tac:0,tinv:null};toast('Proposition envoyée !');render();
 };
 A.tAcc=async id=>{
   let tt;
   try{
     await runTransaction(db,async tx=>{
       const tr=doc(db,'trades',id),t=(await tx.get(tr)).data();
-      if(!t||t.status!=='pending')throw 'Échange déjà traité';
-      if(t.to!==uid)throw 'Non autorisé';
+      if(!t||t.status!=='pending')throw 'Échange déjà traité';if(t.to!==uid)throw 'Non autorisé';
       const fr=doc(db,'users',t.from),to=doc(db,'users',t.to),fs=await tx.get(fr),ts=await tx.get(to);
-      const fi=cl(fs.data().inv||{}),ti=cl(ts.data().inv||{});
-      let fa=fs.data().ac||0,ta=ts.data().ac||0;
+      const fi=cl(fs.data().inv||{}),ti=cl(ts.data().inv||{});let fa=fs.data().ac||0,ta=ts.data().ac||0;
       for(const c of t.offer.cards){if(!subC(fi,c.id,c.g,c.n))throw t.fromName+' ne possède plus ces cartes';addC(ti,c.id,c.g,c.n)}
       for(const c of t.want.cards){if(!subC(ti,c.id,c.g,c.n))throw 'Tu ne possèdes plus ces cartes';addC(fi,c.id,c.g,c.n)}
-      fa+=t.want.ac-t.offer.ac;
-      ta+=t.offer.ac-t.want.ac;
-      if(fa<0||ta<0)throw 'AnimeCoins insuffisants';
-      tx.update(fr,{inv:fi,ac:fa,val:invVal(fi)});
-      tx.update(to,{inv:ti,ac:ta,val:invVal(ti)});
-      tx.update(tr,{status:'accepted'});
-      tt=t;
+      fa+=t.want.ac-t.offer.ac;ta+=t.offer.ac-t.want.ac;if(fa<0||ta<0)throw 'AnimeCoins insuffisants';
+      tx.update(fr,{inv:fi,ac:fa,val:invVal(fi)});tx.update(to,{inv:ti,ac:ta,val:invVal(ti)});tx.update(tr,{status:'accepted'});tt=t;
     });
-    toast('Échange accepté !');
-    notif(tt.from,`✅ ${tt.toName} a accepté ton échange !`);
+    toast('Échange accepté !');notif(tt.from,`✅ ${tt.toName} a accepté ton échange !`,'trade');
   }catch(e){fail(e)}
 };
 A.tDec=async id=>{try{await updateDoc(doc(db,'trades',id),{status:'declined'})}catch(e){fail(e)}};
 
-/* ============ 13. ONGLET SOCIAL : AMIS & SYSTÈME DE CLAN COMPLET ============ */
+/* ============ 14. SOCIAL : AMIS & CLANS (OUVERTS / PRIVÉS) ============ */
 const CLAN_ICONS=['⚔️','🛡️','🐉','🦅','👑','🔥','🌙','⚡'];
-const CLAN_QUESTS=[
-  {id:'q_packs',key:'packs',title:'Ouvrir 50 boosters en clan',goal:50,rew:300},
-  {id:'q_coins',key:'coins',title:'Verser 5 000 AC dans le coffre du clan',goal:5000,rew:500},
-  {id:'q_rares',key:'rares',title:'Obtenir 5 cartes Légendaires ou Mythiques',goal:5,rew:600}
-];
-
+const CLAN_QUESTS=[{id:'q_packs',key:'packs',title:'Ouvrir 50 boosters en clan',goal:50,rew:300},{id:'q_coins',key:'coins',title:'Verser 5 000 AC dans le coffre du clan',goal:5000,rew:500},{id:'q_rares',key:'rares',title:'Obtenir 5 cartes Légendaires ou Mythiques',goal:5,rew:600}];
 const chatH=()=>(S.chat||[]).map(m=>`<div class="py-0.5"><b class="text-indigo-300">${E(m.name)}</b> : <span class="text-slate-200">${E(m.t)}</span></div>`).join('')||'<p class="text-slate-500">Aucun message dans le salon du clan.</p>';
-
 function vSoc(){
-  return `<div class="space-y-4">
-    <div class="flex gap-2 border-b border-white/10 pb-2.5">
-      <button class="tab ${S.socTab==='friends'?'on':''}" data-a="socGo" data-p="friends">👥 Mes Amis (${Object.keys(S.fr).length})</button>
-      <button class="tab ${S.socTab==='clans'?'on':''}" data-a="socGo" data-p="clans">🛡️ Clans ${S.clan?`— ${E(S.clan.name)}`:''}</button>
-    </div>
-    ${S.socTab==='friends'?vSocFriends():vSocClans()}
-  </div>`;
+  return `<div class="space-y-4"><div class="flex gap-2 border-b border-white/10 pb-2.5"><button class="tab ${S.socTab==='friends'?'on':''}" data-a="socGo" data-p="friends">Mes amis (${Object.keys(S.fr).length})</button><button class="tab ${S.socTab==='clans'?'on':''}" data-a="socGo" data-p="clans">Clans${S.clan?' — '+E(S.clan.name):''}</button></div>${S.socTab==='friends'?vSocFriends():vSocClans()}</div>`;
 }
 A.socGo=t=>{S.socTab=t;render()};
-
 function vSocFriends(){
-  const u=U();
-  return `<div class="grid md:grid-cols-2 gap-4">
-    <div class="glass p-4 space-y-3">
-      <h3 class="font-bold text-base text-white">Ajouter un ami</h3>
-      <div class="flex gap-2">
-        <input id="fn" placeholder="Pseudo exact ou ID du joueur…" class="flex-1">
-        <button class="btn" data-a="addF">Envoyer</button>
-      </div>
-      <p class="text-xs text-slate-400">Ton ID joueur : <code class="text-slate-200 bg-white/5 px-1.5 py-0.5 rounded select-all">${uid}</code></p>
-      ${(u.reqs||[]).length?`<div class="space-y-2 pt-2 border-t border-white/10">
-        <div class="text-xs font-semibold text-indigo-300">Demandes d'amis reçues</div>
-        ${(u.reqs||[]).map(r=>`<div class="flex items-center justify-between gap-2 text-xs bg-white/5 rounded-lg p-2">
-          <b class="text-white">${E(r.name)}</b>
-          <div class="flex gap-1.5">
-            <button class="btn px-2.5 py-1 text-xs" data-a="reqOk" data-p="${r.uid}|${E(r.name)}">Accepter</button>
-            <button class="btn2 px-2.5 py-1 text-xs" data-a="reqNo" data-p="${r.uid}|${E(r.name)}">Refuser</button>
-          </div>
-        </div>`).join('')}
-      </div>`:''}
-    </div>
-    <div class="glass p-4 space-y-3">
-      <h3 class="font-bold text-base text-white">Liste d'amis</h3>
-      <div class="space-y-2">
-        ${Object.entries(S.fr).map(([i,f])=>`<div class="flex items-center gap-2.5 p-2 rounded-lg bg-white/[0.03] border border-white/5 text-sm">
-          ${avatarHTML(f,'w-9 h-9 text-sm')}
-          <div class="flex-1 min-w-0">
-            <div class="font-semibold text-white truncate flex items-center gap-1.5">
-              <span>${E(f.name)}</span>
-              <span class="text-[10px]">${online(f)?'🟢 En ligne':'⚫ Hors ligne'}</span>
-            </div>
-            <div class="text-xs text-slate-400">Collection : ${(f.val||0).toLocaleString()} AC</div>
-          </div>
-          <button class="btn2 text-xs" data-a="tradeWith" data-p="${i}">🤝 Échanger</button>
-        </div>`).join('')||'<p class="text-xs text-slate-500 py-6 text-center">Tu n\'as pas encore d\'amis dans ta liste.</p>'}
-      </div>
-    </div>
-  </div>`;
+  const u=U(),sent=(u.sent||[]).filter(r=>!(u.friends||[]).includes(r.uid));
+  return `<div class="grid md:grid-cols-2 gap-4"><div class="glass p-4 space-y-3"><h3 class="font-bold text-base text-white">Ajouter un ami</h3>
+    <div class="flex gap-2"><input id="fn" placeholder="Pseudo exact ou ID du joueur…" class="flex-1"><button class="btn" data-a="addF">Envoyer</button></div>
+    <p class="text-xs text-slate-400">Ton ID joueur : <code class="text-slate-200 bg-white/5 px-1.5 py-0.5 rounded select-all">${uid}</code></p>
+    ${(u.reqs||[]).length?`<div class="space-y-2 pt-2 border-t border-white/10"><div class="text-xs font-semibold text-indigo-300">Demandes reçues</div>${(u.reqs||[]).map(r=>`<div class="flex items-center justify-between gap-2 text-xs bg-white/5 rounded-lg p-2"><b class="text-white">${E(r.name)}</b><div class="flex gap-1.5"><button class="btn px-2.5 py-1 text-xs" data-a="reqOk" data-p="${r.uid}|${E(r.name)}">Accepter</button><button class="btn2 px-2.5 py-1 text-xs" data-a="reqNo" data-p="${r.uid}|${E(r.name)}">Refuser</button></div></div>`).join('')}</div>`:''}
+    <div class="space-y-2 pt-2 border-t border-white/10"><div class="text-xs font-semibold text-amber-300">Demandes envoyées en attente (${sent.length})</div>
+    ${sent.map(r=>`<div class="flex items-center justify-between gap-2 text-xs bg-white/5 rounded-lg p-2"><span class="text-slate-200">${E(r.name)} <span class="text-slate-500">— en attente</span></span><button class="btn2 px-2.5 py-1 text-xs" data-a="cancelReq" data-p="${r.uid}">Annuler</button></div>`).join('')||'<p class="text-xs text-slate-500">Aucune demande en attente.</p>'}</div></div>
+    <div class="glass p-4 space-y-3"><h3 class="font-bold text-base text-white">Liste d'amis</h3><div class="space-y-2">
+    ${Object.entries(S.fr).map(([i,f])=>`<div class="flex items-center gap-2.5 p-2 rounded-lg bg-white/[0.03] border border-white/5 text-sm">${avatarHTML(f,'w-9 h-9 text-sm')}<div class="flex-1 min-w-0"><div class="font-semibold text-white truncate">${E(f.name)} <span class="text-[10px] font-normal">${online(f)?'🟢 En ligne':'⚫ Hors ligne'}</span></div><div class="text-xs text-slate-400">Collection : ${(f.val||0).toLocaleString()} AC</div></div><button class="btn2 text-xs" data-a="tradeWith" data-p="${i}">Échanger</button></div>`).join('')||'<p class="text-xs text-slate-500 py-6 text-center">Tu n\'as pas encore d\'amis.</p>'}</div></div></div>`;
 }
-
 function vSocClans(){
   const c=S.clan;
   if(!c){
-    const list=S.clans.filter(x=>!S.CLQ||x.name?.toLowerCase().includes(S.CLQ.toLowerCase())||(x.tag||'').toLowerCase().includes(S.CLQ.toLowerCase()));
-    return `<div class="grid md:grid-cols-2 gap-5">
-      <div class="glass p-4 space-y-3">
-        <div>
-          <h3 class="font-bold text-base text-white">🔍 Rejoindre un Clan existant</h3>
-          <p class="text-xs text-slate-400">Rejoins une guilde de collectionneurs pour débloquer des bonus de régénération et des quêtes</p>
-        </div>
-        <input placeholder="Rechercher un clan par nom ou tag…" value="${E(S.CLQ)}" data-i="clanQ" class="w-full">
-        <div id="clanList" class="space-y-2 max-h-96 overflow-auto pr-1">
-          ${list.map(x=>{
-            const lvl=1+Math.floor((x.treasury||0)/2000);
-            return `<div class="p-3 rounded-lg bg-white/[0.03] border border-white/10 flex items-center justify-between gap-3">
-              <div class="flex items-center gap-2.5 min-w-0">
-                <span class="w-10 h-10 rounded-lg bg-indigo-500/15 border border-indigo-400/30 flex items-center justify-center text-xl shrink-0">${E(x.icon||'⚔️')}</span>
-                <div class="min-w-0">
-                  <div class="font-bold text-sm text-white truncate">${x.tag?`<span class="text-indigo-400">[${E(x.tag)}]</span> `:''}${E(x.name)} <span class="text-xs font-normal text-amber-300">Niv.${lvl}</span></div>
-                  <div class="text-xs text-slate-400 truncate">${E(x.desc||'Aucune description')} · ${(x.members||[]).length} membre(s)</div>
-                </div>
-              </div>
-              <button class="btn text-xs shrink-0" data-a="joinC" data-p="${x.id}">Rejoindre</button>
-            </div>`;
-          }).join('')||'<p class="text-xs text-slate-500 py-8 text-center">Aucun clan trouvé. Crée le tien juste à côté !</p>'}
-        </div>
-      </div>
-
-      <div class="glass p-4 space-y-3 border border-indigo-500/30">
-        <div>
-          <h3 class="font-bold text-base text-white">🏰 Créer un nouveau Clan</h3>
-          <p class="text-xs text-slate-400">Fonde ta propre guilde, personnalise ton blason et dirige tes membres</p>
-        </div>
-        <div class="grid grid-cols-3 gap-2">
-          <div class="col-span-2">
-            <label class="block text-xs text-slate-400 mb-1">Nom du Clan</label>
-            <input id="cn2" placeholder="Ex: Brigade Fantôme" class="w-full">
-          </div>
-          <div>
-            <label class="block text-xs text-slate-400 mb-1">Tag (3-4 car.)</label>
-            <input id="ctag" maxlength="4" placeholder="ex: BGFT" class="w-full uppercase">
-          </div>
-        </div>
-        <div>
-          <label class="block text-xs text-slate-400 mb-1">Choisir un Blason</label>
-          <div class="flex gap-1.5 flex-wrap">
-            ${CLAN_ICONS.map(ic=>`<button class="btn2 text-base w-9 h-9 ${S.cIcon===ic?'border-indigo-400 bg-indigo-500/20':''}" data-a="pickCIcon" data-p="${ic}">${ic}</button>`).join('')}
-          </div>
-        </div>
-        <div>
-          <label class="block text-xs text-slate-400 mb-1">Devise / Description du Clan</label>
-          <textarea id="cdesc" rows="2" class="w-full" placeholder="Objectifs du clan, ambiance, recrutement…"></textarea>
-        </div>
-        <button class="btn w-full py-2.5" data-a="mkC">⚡ Fonder le Clan</button>
-      </div>
-    </div>`;
+    const list=S.clans.filter(x=>!S.CLQ||(x.name||'').toLowerCase().includes(S.CLQ.toLowerCase())||(x.tag||'').toLowerCase().includes(S.CLQ.toLowerCase())),f=S.cForm;
+    return `<div class="grid md:grid-cols-2 gap-5"><div class="glass p-4 space-y-3"><div><h3 class="font-bold text-base text-white">Rejoindre un clan</h3><p class="text-xs text-slate-400">Bonus de régénération, quêtes collectives et chat de guilde</p></div>
+      <input placeholder="Rechercher un clan par nom ou tag…" value="${E(S.CLQ)}" data-i="clanQ" class="w-full"><div class="space-y-2 max-h-96 overflow-auto pr-1">
+      ${list.map(x=>{const lvl=1+Math.floor((x.treasury||0)/2000),priv=x.privacy==='private',asked=(x.pending||[]).some(p=>p.uid===uid);
+        return `<div class="p-3 rounded-lg bg-white/[0.03] border border-white/10 flex items-center justify-between gap-3"><div class="flex items-center gap-2.5 min-w-0"><span class="w-10 h-10 rounded-lg bg-indigo-500/15 border border-indigo-400/30 flex items-center justify-center text-xl shrink-0">${E(x.icon||'⚔️')}</span>
+        <div class="min-w-0"><div class="font-bold text-sm text-white truncate">${x.tag?`<span class="text-indigo-400">[${E(x.tag)}]</span> `:''}${E(x.name)} <span class="text-xs font-normal text-amber-300">Niv.${lvl}</span> <span class="text-[10px] px-1.5 py-0.5 rounded ${priv?'bg-rose-500/15 text-rose-300':'bg-emerald-500/15 text-emerald-300'}">${priv?'Privé':'Ouvert'}</span></div>
+        <div class="text-xs text-slate-400 truncate">${E(x.desc||'Aucune description')} · ${(x.members||[]).length} membre(s)</div></div></div>
+        ${asked?`<button class="btn2 text-xs shrink-0" data-a="cancelJoin" data-p="${x.id}">Demande envoyée · Annuler</button>`:`<button class="btn text-xs shrink-0" data-a="joinC" data-p="${x.id}">${priv?'Demander à rejoindre':'Rejoindre'}</button>`}</div>`}).join('')||'<p class="text-xs text-slate-500 py-8 text-center">Aucun clan trouvé. Crée le tien !</p>'}</div></div>
+      <div class="glass p-4 space-y-3 border border-indigo-500/30"><div><h3 class="font-bold text-base text-white">Créer un clan</h3><p class="text-xs text-slate-400">Fonde ta guilde, choisis son blason, sa bio et son accès</p></div>
+      <div class="grid grid-cols-3 gap-2"><div class="col-span-2"><label class="block text-xs text-slate-400 mb-1">Nom du clan</label><input id="cn2" value="${E(f.name)}" data-i="cfName" placeholder="Ex : Brigade Fantôme" class="w-full"></div>
+      <div><label class="block text-xs text-slate-400 mb-1">Tag (3-4 car.)</label><input id="ctag" value="${E(f.tag)}" data-i="cfTag" maxlength="4" placeholder="BGFT" class="w-full uppercase"></div></div>
+      <div><label class="block text-xs text-slate-400 mb-1">Blason</label><div class="flex gap-1.5 flex-wrap">${CLAN_ICONS.map(ic=>`<button class="btn2 text-base w-9 h-9 ${S.cIcon===ic?'border-indigo-400 bg-indigo-500/20':''}" data-a="pickCIcon" data-p="${ic}">${ic}</button>`).join('')}</div></div>
+      <div><label class="block text-xs text-slate-400 mb-1">Accès au clan</label><div class="flex gap-2"><button class="btn2 flex-1 ${S.cPriv==='open'?'border-emerald-400 bg-emerald-500/15 text-white':''}" data-a="setPriv" data-p="open">🔓 Ouvert (adhésion directe)</button><button class="btn2 flex-1 ${S.cPriv==='private'?'border-rose-400 bg-rose-500/15 text-white':''}" data-a="setPriv" data-p="private">🔒 Privé (sur validation)</button></div></div>
+      <div><label class="block text-xs text-slate-400 mb-1">Bio détaillée du clan</label><textarea id="cdesc" rows="3" data-i="cfDesc" class="w-full" placeholder="Objectifs, ambiance, critères de recrutement…">${E(f.desc)}</textarea></div>
+      <button class="btn w-full py-2.5" data-a="mkC">Fonder le clan</button></div></div>`;
   }
-
-  const lvl=clanLvl();
-  const tr=c.treasury||0;
-  const nextLvlAt=lvl*2000;
-  const pct=Math.min(100,Math.round(((tr%2000)/2000)*100));
-  const roles=c.roles||{};
-  const myRole=c.owner===uid?'Chef':(roles[uid]==='officer'?'Officier':'Membre');
-  const isLeader=c.owner===uid;
-  const rows=[...S.cmem].sort((a,b)=>(b.val||0)-(a.val||0));
-  const qData=c.quests||{packs:0,coins:0,rares:0};
-  const claimedQ=U().clanQuestsClaimed||[];
-
-  return `<div class="space-y-4">
-    <div class="glass p-4 flex flex-wrap items-center justify-between gap-4 border-l-4 border-l-indigo-500">
-      <div class="flex items-center gap-3">
-        <div class="w-12 h-12 rounded-xl bg-indigo-500/15 border border-indigo-400/30 flex items-center justify-center text-2xl">${E(c.icon||'⚔️')}</div>
-        <div>
-          <div class="flex items-center gap-2 flex-wrap">
-            <h3 class="text-lg font-bold text-white">${c.tag?`<span class="text-indigo-400">[${E(c.tag)}]</span> `:''}${E(c.name)}</h3>
-            <span class="px-2 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-400/30">Niveau ${lvl}</span>
-            <span class="px-2 py-0.5 rounded-full text-xs bg-white/5 text-slate-300">Ton rôle : <b>${myRole}</b></span>
-          </div>
-          <p class="text-xs text-slate-400 mt-0.5">${E(c.desc||'Clan officiel AnimeCards')}</p>
-        </div>
-      </div>
-      <button class="btn2 text-xs text-rose-300 border-rose-500/30" data-a="leaveC">Quitter le clan</button>
-    </div>
-
-    <div class="grid md:grid-cols-3 gap-4">
-      <div class="glass p-4 space-y-2.5">
-        <div class="flex items-center justify-between">
-          <h4 class="font-bold text-sm text-white">🏦 Coffre du Clan</h4>
-          <span class="text-xs font-bold text-amber-300">${tr.toLocaleString()} AC</span>
-        </div>
-        <div class="h-2 bg-white/10 rounded-full overflow-hidden">
-          <div class="h-2 bg-indigo-500" style="width:${pct}%"></div>
-        </div>
-        <p class="text-[11px] text-slate-400">Prochain niveau à <b>${nextLvlAt.toLocaleString()} AC</b> (chaque palier de 2 000 AC augmente le niveau du clan).</p>
-        <div class="flex gap-1.5 pt-1">
-          <input id="donAmt" type="number" min="50" step="50" value="200" class="w-28 flex-1">
-          <button class="btn text-xs" data-a="donateC">Faire un don</button>
-        </div>
-      </div>
-
-      <div class="glass p-4 space-y-2">
-        <h4 class="font-bold text-sm text-white">✨ Bonus Passifs Actifs (Niv. ${lvl})</h4>
-        <div class="space-y-1.5 text-xs">
-          <div class="p-2 rounded bg-white/5 flex justify-between">
-            <span class="text-slate-300">⏱ Régénération des boosters :</span>
-            <b class="text-emerald-300">-${Math.min(45,lvl*5)} sec / pack</b>
-          </div>
-          <div class="p-2 rounded bg-white/5 flex justify-between">
-            <span class="text-slate-300">🎁 Bonus quotidien augmenté :</span>
-            <b class="text-amber-300">+${lvl*25} AC / jour</b>
-          </div>
-          <div class="p-2 rounded bg-white/5 flex justify-between">
-            <span class="text-slate-300">👥 Membres actifs :</span>
-            <b class="text-white">${rows.length} / 30</b>
-          </div>
-        </div>
-      </div>
-
-      <div class="glass p-4 space-y-2">
-        <h4 class="font-bold text-sm text-white">🎯 Quêtes Collectives de Clan</h4>
-        <div class="space-y-2 text-xs">
-          ${CLAN_QUESTS.map(q=>{
-            const cur=Math.min(q.goal,qData[q.key]||0);
-            const done=cur>=q.goal;
-            const claimed=claimedQ.includes(c.id+'_'+q.id);
-            return `<div class="p-2 rounded bg-white/5 space-y-1">
-              <div class="flex justify-between gap-1">
-                <span class="font-medium text-slate-200">${q.title}</span>
-                <span class="text-amber-300 font-bold">+${q.rew} AC</span>
-              </div>
-              <div class="flex items-center gap-2">
-                <div class="flex-1 h-1.5 bg-white/10 rounded-full overflow-hidden">
-                  <div class="h-1.5 bg-emerald-400" style="width:${Math.round(cur/q.goal*100)}%"></div>
-                </div>
-                <span class="text-[10px] text-slate-400">${cur}/${q.goal}</span>
-                ${done&&!claimed?`<button class="btn px-2 py-0.5 text-[10px]" data-a="claimClanQ" data-p="${q.id}">Réclamer</button>`:''}
-                ${claimed?`<span class="text-[10px] text-emerald-400">✓ Reçu</span>`:''}
-              </div>
-            </div>`;
-          }).join('')}
-        </div>
-      </div>
-    </div>
-
-    <div class="grid md:grid-cols-2 gap-4">
-      <div class="glass p-4 space-y-2.5">
-        <h4 class="font-bold text-sm text-white">👑 Classement & Rôles des Membres</h4>
-        <div class="space-y-1.5 max-h-64 overflow-auto pr-1 text-xs">
-          ${rows.map((r,i)=>{
-            const rRole=c.owner===r.id?'Chef':(roles[r.id]==='officer'?'Officier':'Membre');
-            const badgeCol=rRole==='Chef'?'text-amber-300 bg-amber-500/15':rRole==='Officier'?'text-indigo-300 bg-indigo-500/15':'text-slate-400 bg-white/5';
-            return `<div class="flex items-center justify-between gap-2 p-2 rounded bg-white/[0.03] border border-white/5">
-              <div class="flex items-center gap-2 min-w-0">
-                <span class="text-slate-500 font-bold w-4">${i+1}.</span>
-                ${avatarHTML(r,'w-7 h-7 text-xs')}
-                <div class="min-w-0">
-                  <div class="font-semibold text-white truncate">${E(r.name)} ${online(r)?'🟢':''} <span class="px-1.5 py-0.5 rounded text-[10px] ${badgeCol}">${rRole}</span></div>
-                  <div class="text-[10px] text-slate-400">Dons coffre : ${(r.clanContributed||0).toLocaleString()} AC</div>
-                </div>
-              </div>
-              <div class="flex items-center gap-2 shrink-0">
-                <b class="text-slate-200">${(r.val||0).toLocaleString()} AC</b>
-                ${isLeader&&r.id!==uid?`<button class="btn2 px-1.5 py-0.5 text-[10px]" data-a="toggleOfficer" data-p="${r.id}">${roles[r.id]==='officer'?'Rétrograder':'Promouvoir'}</button>`:''}
-              </div>
-            </div>`;
-          }).join('')}
-        </div>
-      </div>
-
-      <div class="glass p-4 flex flex-col justify-between space-y-2.5">
-        <h4 class="font-bold text-sm text-white">💬 Salon de discussion du Clan</h4>
-        <div id="chatlog" class="h-48 overflow-auto bg-[#090b10] border border-white/10 rounded-lg p-2.5 text-xs space-y-1">${chatH()}</div>
-        <div class="flex gap-2">
-          <input id="cm" class="flex-1" placeholder="Écrire un message au clan…" onkeydown="if(event.key==='Enter')document.getElementById('sendBtn').click()">
-          <button id="sendBtn" class="btn" data-a="say">Envoyer</button>
-        </div>
-      </div>
-    </div>
-  </div>`;
+  const lvl=clanLvl(),tr=c.treasury||0,pct=Math.min(100,Math.round(((tr%2000)/2000)*100)),roles=c.roles||{};
+  const isLeader=c.owner===uid,isOff=isLeader||roles[uid]==='officer',myRole=isLeader?'Chef':roles[uid]==='officer'?'Officier':'Membre';
+  const rows=[...S.cmem].sort((a,b)=>(b.val||0)-(a.val||0)),qd=c.quests||{packs:0,coins:0,rares:0},claimedQ=U().clanQuestsClaimed||[],pend=c.pending||[];
+  return `<div class="space-y-4"><div class="glass p-4 flex flex-wrap items-center justify-between gap-4 border-l-4 border-l-indigo-500"><div class="flex items-center gap-3"><div class="w-12 h-12 rounded-xl bg-indigo-500/15 border border-indigo-400/30 flex items-center justify-center text-2xl">${E(c.icon||'⚔️')}</div>
+    <div><div class="flex items-center gap-2 flex-wrap"><h3 class="text-base font-bold text-white">${c.tag?`<span class="text-indigo-400">[${E(c.tag)}]</span> `:''}${E(c.name)}</h3><span class="px-2 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300">Niveau ${lvl}</span>
+    <span class="px-2 py-0.5 rounded-full text-[11px] ${c.privacy==='private'?'bg-rose-500/15 text-rose-300':'bg-emerald-500/15 text-emerald-300'}">${c.privacy==='private'?'Privé':'Ouvert'}</span><span class="px-2 py-0.5 rounded-full text-xs bg-white/5 text-slate-300">Ton rôle : <b>${myRole}</b></span></div>
+    <p class="text-xs text-slate-400 mt-1 max-w-xl">${E(c.desc||'Clan officiel AnimeCards')}</p></div></div><button class="btn2 text-xs text-rose-300 border-rose-500/30" data-a="leaveC">Quitter le clan</button></div>
+  ${isOff&&c.privacy==='private'?`<div class="glass p-4 space-y-2 border border-amber-400/30"><h4 class="font-bold text-sm text-white">Candidatures en attente (${pend.length})</h4>${pend.map(p=>`<div class="flex items-center justify-between gap-2 text-xs bg-white/5 rounded-lg p-2"><b class="text-white">${E(p.name)}</b><div class="flex gap-1.5"><button class="btn px-2.5 py-1 text-xs" data-a="acceptJoin" data-p="${p.uid}|${E(p.name)}">Accepter</button><button class="btn2 px-2.5 py-1 text-xs" data-a="refuseJoin" data-p="${p.uid}|${E(p.name)}">Refuser</button></div></div>`).join('')||'<p class="text-xs text-slate-500">Aucune candidature pour le moment.</p>'}</div>`:''}
+  <div class="grid md:grid-cols-3 gap-4"><div class="glass p-4 space-y-2.5"><div class="flex justify-between"><h4 class="font-bold text-sm text-white">Coffre du clan</h4><span class="text-xs font-bold text-amber-300">${tr.toLocaleString()} AC</span></div>
+    <div class="h-2 bg-white/10 rounded-full overflow-hidden"><div class="h-2 bg-indigo-500" style="width:${pct}%"></div></div><p class="text-[11px] text-slate-400">Prochain niveau à <b>${(lvl*2000).toLocaleString()} AC</b>.</p>
+    <div class="flex gap-1.5 pt-1"><input id="donAmt" type="number" min="50" step="50" value="200" class="w-28 flex-1"><button class="btn text-xs" data-a="donateC">Faire un don</button></div></div>
+    <div class="glass p-4 space-y-2"><h4 class="font-bold text-sm text-white">Bonus passifs (Niv. ${lvl})</h4><div class="space-y-1.5 text-xs"><div class="p-2 rounded bg-white/5 flex justify-between"><span class="text-slate-300">Régénération des boosters</span><b class="text-emerald-300">-${Math.min(45,lvl*5)} s / pack</b></div><div class="p-2 rounded bg-white/5 flex justify-between"><span class="text-slate-300">Bonus quotidien</span><b class="text-amber-300">+${lvl*25} AC</b></div><div class="p-2 rounded bg-white/5 flex justify-between"><span class="text-slate-300">Membres</span><b class="text-white">${rows.length} / 30</b></div></div></div>
+    <div class="glass p-4 space-y-2"><h4 class="font-bold text-sm text-white">Quêtes collectives</h4><div class="space-y-2 text-xs">${CLAN_QUESTS.map(q=>{const cur=Math.min(q.goal,qd[q.key]||0),done=cur>=q.goal,cl2=claimedQ.includes(c.id+'_'+q.id);
+      return `<div class="p-2 rounded bg-white/5 space-y-1"><div class="flex justify-between gap-1"><span class="font-medium text-slate-200">${q.title}</span><span class="text-amber-300 font-bold">+${q.rew}</span></div><div class="flex items-center gap-2"><div class="flex-1 h-1.5 bg-white/10 rounded-full overflow-hidden"><div class="h-1.5 bg-emerald-400" style="width:${Math.round(cur/q.goal*100)}%"></div></div><span class="text-[10px] text-slate-400">${cur}/${q.goal}</span>${done&&!cl2?`<button class="btn px-2 py-0.5 text-[10px]" data-a="claimClanQ" data-p="${q.id}">Réclamer</button>`:''}${cl2?'<span class="text-[10px] text-emerald-400">✓</span>':''}</div></div>`}).join('')}</div></div></div>
+  <div class="grid md:grid-cols-2 gap-4"><div class="glass p-4 space-y-2.5"><h4 class="font-bold text-sm text-white">Classement & rôles</h4><div class="space-y-1.5 max-h-64 overflow-auto pr-1 text-xs">
+    ${rows.map((r,i)=>{const rr=c.owner===r.id?'Chef':roles[r.id]==='officer'?'Officier':'Membre',bc=rr==='Chef'?'text-amber-300 bg-amber-500/15':rr==='Officier'?'text-indigo-300 bg-indigo-500/15':'text-slate-400 bg-white/5';
+    return `<div class="flex items-center justify-between gap-2 p-2 rounded bg-white/[0.03] border border-white/5"><div class="flex items-center gap-2 min-w-0"><span class="text-slate-500 font-bold w-4">${i+1}.</span>${avatarHTML(r,'w-7 h-7 text-xs')}<div class="min-w-0"><div class="font-semibold text-white truncate">${E(r.name)} ${online(r)?'🟢':''} <span class="px-1.5 py-0.5 rounded text-[10px] ${bc}">${rr}</span></div><div class="text-[10px] text-slate-400">Dons : ${(r.clanContributed||0).toLocaleString()} AC</div></div></div>
+    <div class="flex items-center gap-2 shrink-0"><b class="text-slate-200">${(r.val||0).toLocaleString()} AC</b>${isLeader&&r.id!==uid?`<button class="btn2 px-1.5 py-0.5 text-[10px]" data-a="toggleOfficer" data-p="${r.id}">${roles[r.id]==='officer'?'Rétrograder':'Promouvoir'}</button>`:''}</div></div>`}).join('')}</div></div>
+  <div class="glass p-4 flex flex-col justify-between space-y-2.5"><h4 class="font-bold text-sm text-white">Salon de discussion</h4><div id="chatlog" class="h-48 overflow-auto bg-[#090b10] border border-white/10 rounded-lg p-2.5 text-xs space-y-1">${chatH()}</div>
+  <div class="flex gap-2"><input id="cm" class="flex-1" placeholder="Écrire un message au clan…" onkeydown="if(event.key==='Enter')document.getElementById('sendBtn').click()"><button id="sendBtn" class="btn" data-a="say">Envoyer</button></div></div></div></div>`;
 }
-
 A.clanQ=v=>{S.CLQ=v;render()};
-A.pickCIcon=ic=>{S.cIcon=ic;render()};
+A.cfName=v=>{S.cForm.name=v};A.cfTag=v=>{S.cForm.tag=v};A.cfDesc=v=>{S.cForm.desc=v};
+A.pickCIcon=ic=>{S.cIcon=ic;render()};A.setPriv=p=>{S.cPriv=p;render()};
 A.addF=async()=>{
-  const n=$('#fn').value.trim();
-  if(!n)return;
+  const inp=$('#fn'),n=inp.value.trim();if(!n)return;
   try{
-    let tid=null;
+    let tid=null,tname='';
     const q=await getDocs(query(collection(db,'users'),where('nameL','==',n.toLowerCase()),limit(1)));
-    if(q.docs.length)tid=q.docs[0].id;
-    else{const d=await getDoc(doc(db,'users',n));if(d.exists())tid=d.id}
+    if(q.docs.length){tid=q.docs[0].id;tname=q.docs[0].data().name}else{const d=await getDoc(doc(db,'users',n));if(d.exists()){tid=d.id;tname=d.data().name}}
     if(!tid)return toast('Joueur introuvable');
     if(tid===uid)return toast('C\'est ton propre compte !');
     if((U().friends||[]).includes(tid))return toast('Vous êtes déjà amis');
+    if((U().sent||[]).some(r=>r.uid===tid))return toast('Demande déjà envoyée');
     await updateDoc(doc(db,'users',tid),{reqs:arrayUnion({uid,name:U().name})});
-    notif(tid,`👥 ${U().name} t'a envoyé une demande d'ami`);
-    toast('Demande d\'ami envoyée !');
+    await saveU({sent:arrayUnion({uid:tid,name:tname})});
+    notif(tid,`👥 ${U().name} t'a envoyé une demande d'ami`,'friend');
+    inp.value='';toast('Demande d\'ami envoyée !');
   }catch(e){fail(e)}
 };
+A.cancelReq=async tid=>{
+  const r=(U().sent||[]).find(x=>x.uid===tid);if(!r)return;
+  try{await saveU({sent:arrayRemove(r)});await updateDoc(doc(db,'users',tid),{reqs:arrayRemove({uid,name:U().name})}).catch(()=>{});toast('Demande annulée')}catch(e){fail(e)}
+};
 A.reqOk=async p=>{
-  const [i,n]=p.split('|'),r={uid:i,name:n},b=writeBatch(db);
-  b.update(ME(),{friends:arrayUnion(i),reqs:arrayRemove(r)});
-  b.update(doc(db,'users',i),{friends:arrayUnion(uid)});
-  await b.commit().catch(fail);
-  notif(i,`👥 ${U().name} a accepté ta demande d'ami`);
+  const [i,n]=p.split('|'),b=writeBatch(db);
+  b.update(ME(),{friends:arrayUnion(i),reqs:arrayRemove({uid:i,name:n})});
+  b.update(doc(db,'users',i),{friends:arrayUnion(uid),sent:arrayRemove({uid,name:U().name})});
+  await b.commit().catch(fail);notif(i,`👥 ${U().name} a accepté ta demande d'ami`,'friend');
 };
-A.reqNo=p=>{
-  const [i,n]=p.split('|');
-  saveU({reqs:arrayRemove({uid:i,name:n})});
-};
+A.reqNo=async p=>{const [i,n]=p.split('|');await saveU({reqs:arrayRemove({uid:i,name:n})});updateDoc(doc(db,'users',i),{sent:arrayRemove({uid,name:U().name})}).catch(()=>{})};
 A.tradeWith=async i=>{S.tab='trade';await A.tSel(i)};
-
 A.mkC=async()=>{
-  const n=$('#cn2')?.value.trim();
-  const tag=($('#ctag')?.value.trim()||'').toUpperCase().slice(0,4);
-  const desc=$('#cdesc')?.value.trim()||'';
-  if(!n||n.length<3)return toast('Le nom du clan doit contenir au moins 3 caractères');
+  const n=(S.cForm.name||'').trim(),tag=(S.cForm.tag||'').trim().toUpperCase().slice(0,4),desc=(S.cForm.desc||'').trim();
+  if(n.length<3)return toast('Le nom du clan doit contenir au moins 3 caractères');
   try{
-    const r=await addDoc(collection(db,'clans'),{
-      name:n,tag,icon:S.cIcon||'⚔️',desc,owner:uid,
-      members:[uid],roles:{[uid]:'leader'},treasury:0,
-      quests:{packs:0,coins:0,rares:0},ts:Date.now()
-    });
-    await saveU({clan:r.id,clanContributed:0});
-    toast('Clan fondé avec succès !');
+    const r=await addDoc(collection(db,'clans'),{name:n,tag,icon:S.cIcon||'⚔️',desc,privacy:S.cPriv||'open',owner:uid,members:[uid],pending:[],roles:{[uid]:'leader'},treasury:0,quests:{packs:0,coins:0,rares:0},ts:Date.now()});
+    await saveU({clan:r.id,clanContributed:0});S.cForm={name:'',tag:'',desc:''};toast('Clan fondé avec succès !');
   }catch(e){fail(e)}
 };
 A.joinC=async id=>{
+  const x=S.clans.find(c=>c.id===id);
   try{
-    await updateDoc(doc(db,'clans',id),{members:arrayUnion(uid)});
-    await saveU({clan:id});
-    toast('Tu as rejoint le clan !');
+    if(x?.privacy==='private'){
+      await updateDoc(doc(db,'clans',id),{pending:arrayUnion({uid,name:U().name})});
+      const staff=[x.owner,...Object.entries(x.roles||{}).filter(([,r])=>r==='officer').map(([k])=>k)];
+      staff.forEach(s=>notif(s,`🛡️ ${U().name} demande à rejoindre le clan ${x.name}`,'clan'));
+      toast('Demande envoyée aux responsables du clan');
+    }else{
+      await updateDoc(doc(db,'clans',id),{members:arrayUnion(uid)});await saveU({clan:id});toast('Tu as rejoint le clan !');
+    }
   }catch(e){fail(e)}
 };
-A.leaveC=async()=>{
-  const id=U().clan;
-  if(!id)return;
-  await updateDoc(doc(db,'clans',id),{members:arrayRemove(uid)}).catch(()=>{});
-  await saveU({clan:null});
-  toast('Tu as quitté le clan.');
+A.cancelJoin=async id=>{try{await updateDoc(doc(db,'clans',id),{pending:arrayRemove({uid,name:U().name})});toast('Demande annulée')}catch(e){fail(e)}};
+A.acceptJoin=async p=>{
+  const [i,n]=p.split('|'),c=S.clan;if(!c)return;
+  try{
+    const us=await getDoc(doc(db,'users',i)),b=writeBatch(db),entry={uid:i,name:n};
+    if(us.exists()&&us.data().clan&&us.data().clan!==c.id){b.update(doc(db,'clans',c.id),{pending:arrayRemove(entry)});await b.commit();return toast('Ce joueur a déjà rejoint un autre clan')}
+    b.update(doc(db,'clans',c.id),{members:arrayUnion(i),pending:arrayRemove(entry)});b.update(doc(db,'users',i),{clan:c.id});
+    await b.commit();notif(i,`✅ Ta candidature au clan ${c.name} a été acceptée !`,'clan');toast(n+' a rejoint le clan');
+  }catch(e){fail(e)}
 };
+A.refuseJoin=async p=>{
+  const [i,n]=p.split('|'),c=S.clan;if(!c)return;
+  try{await updateDoc(doc(db,'clans',c.id),{pending:arrayRemove({uid:i,name:n})});notif(i,`❌ Ta candidature au clan ${c.name} a été refusée.`,'clan')}catch(e){fail(e)}
+};
+A.leaveC=async()=>{const id=U().clan;if(!id)return;await updateDoc(doc(db,'clans',id),{members:arrayRemove(uid)}).catch(()=>{});await saveU({clan:null});toast('Tu as quitté le clan.')};
 A.donateC=async()=>{
-  const amt=Math.max(0,+$('#donAmt')?.value||0);
-  if(amt<10)return toast('Montant minimum : 10 AC');
-  if((U().ac||0)<amt)return toast('AnimeCoins insuffisants');
-  const cid=U().clan;
-  if(!cid)return;
+  const amt=Math.max(0,+$('#donAmt')?.value||0),cid=U().clan;
+  if(amt<10)return toast('Montant minimum : 10 AC');if((U().ac||0)<amt)return toast('AnimeCoins insuffisants');if(!cid)return;
   try{
     await runTransaction(db,async tx=>{
-      const ur=ME(),cr=doc(db,'clans',cid);
-      const us=await tx.get(ur),cs=await tx.get(cr);
-      if(!cs.exists())throw 'Clan introuvable';
-      const uac=us.data().ac||0;
-      if(uac<amt)throw 'AnimeCoins insuffisants';
-      const cdata=cs.data();
-      const q=cl(cdata.quests||{packs:0,coins:0,rares:0});
-      q.coins=(q.coins||0)+amt;
-      tx.update(ur,{ac:uac-amt,clanContributed:(us.data().clanContributed||0)+amt});
-      tx.update(cr,{treasury:(cdata.treasury||0)+amt,quests:q});
+      const ur=ME(),cr=doc(db,'clans',cid),us=await tx.get(ur),cs=await tx.get(cr);
+      if(!cs.exists())throw 'Clan introuvable';const uac=us.data().ac||0;if(uac<amt)throw 'AnimeCoins insuffisants';
+      const cdt=cs.data(),q=cl(cdt.quests||{packs:0,coins:0,rares:0});q.coins=(q.coins||0)+amt;
+      tx.update(ur,{ac:uac-amt,clanContributed:(us.data().clanContributed||0)+amt});tx.update(cr,{treasury:(cdt.treasury||0)+amt,quests:q});
     });
     toast(`Merci ! +${amt.toLocaleString()} AC versés au coffre du clan.`);
   }catch(e){fail(e)}
 };
-A.toggleOfficer=async targetUid=>{
-  if(!S.clan||S.clan.owner!==uid)return;
-  const roles=cl(S.clan.roles||{});
-  roles[targetUid]=roles[targetUid]==='officer'?'member':'officer';
-  await updateDoc(doc(db,'clans',S.clan.id),{roles});
-  toast('Rôle du membre mis à jour');
-};
+A.toggleOfficer=async t=>{if(!S.clan||S.clan.owner!==uid)return;const roles=cl(S.clan.roles||{});roles[t]=roles[t]==='officer'?'member':'officer';await updateDoc(doc(db,'clans',S.clan.id),{roles});toast('Rôle mis à jour')};
 A.claimClanQ=async qid=>{
-  if(!S.clan)return;
-  const q=CLAN_QUESTS.find(x=>x.id===qid);
-  if(!q)return;
-  const cur=(S.clan.quests||{})[q.key]||0;
-  const key=S.clan.id+'_'+qid;
+  if(!S.clan)return;const q=CLAN_QUESTS.find(x=>x.id===qid);if(!q)return;
+  const cur=(S.clan.quests||{})[q.key]||0,key=S.clan.id+'_'+qid;
   if(cur<q.goal||(U().clanQuestsClaimed||[]).includes(key))return;
-  await saveU({
-    ac:(U().ac||0)+q.rew,
-    earned:(U().earned||0)+q.rew,
-    clanQuestsClaimed:arrayUnion(key)
-  });
-  toast(`Quête de clan validée : +${q.rew} AC !`);
+  await saveU({ac:(U().ac||0)+q.rew,earned:(U().earned||0)+q.rew,clanQuestsClaimed:arrayUnion(key)});toast(`Quête validée : +${q.rew} AC !`);
 };
-A.say=async()=>{
-  const i=$('#cm'),t=i.value.trim();
-  if(!t||!U().clan)return;
-  i.value='';
-  await addDoc(collection(db,'clans',U().clan,'chat'),{u:uid,name:U().name,t,ts:Date.now()}).catch(fail);
-};
+A.say=async()=>{const i=$('#cm'),t=i.value.trim();if(!t||!U().clan)return;i.value='';await addDoc(collection(db,'clans',U().clan,'chat'),{u:uid,name:U().name,t,ts:Date.now()}).catch(fail)};
 
-/* ============ 14. SYSTÈME DE SUCCÈS (ACHIEVEMENTS) ============ */
+/* ============ 15. SUCCÈS ============ */
 function getAchList(){
-  const u=U(),st=stacks(u.inv);
-  const distinct=Object.keys(u.inv||{}).length;
-  const hasLM=Object.keys(u.inv||{}).some(id=>['L','M'].includes(cd(id).rar));
-  const totalGraded=Math.max(u.gradedCount||0,st.filter(s=>s.g>0).reduce((a,s)=>a+s.n,0));
-  const psa10=st.filter(s=>s.g===10).reduce((a,s)=>a+s.n,0);
-  const claimed=u.ach||[];
-
-  const defs=[
+  const u=U(),st=stacks(u.inv),distinct=Object.keys(u.inv||{}).length,hasLM=Object.keys(u.inv||{}).some(id=>['L','M'].includes(cd(id).rar));
+  const tg=Math.max(u.gradedCount||0,st.filter(s=>s.g>0).reduce((a,s)=>a+s.n,0)),p10=st.filter(s=>s.g===10).reduce((a,s)=>a+s.n,0),claimed=u.ach||[];
+  return [
     {id:'ach_pack1',title:'Premier Frisson',desc:'Ouvrir ton tout premier booster',cur:u.opened||0,goal:1,rew:100,icon:'🎴'},
     {id:'ach_pack25',title:'Ouverture en Série',desc:'Ouvrir 25 boosters au total',cur:u.opened||0,goal:25,rew:400,icon:'⚡'},
-    {id:'ach_god',title:'Élu des Dieux',desc:'Obtenir une carte Légendaire ou Mythique dans ta collection',cur:hasLM?1:0,goal:1,rew:300,icon:'🌟'},
-    {id:'ach_col50',title:'Collectionneur Aguerri',desc:'Posséder 50 cartes distinctes dans ton inventaire',cur:distinct,goal:50,rew:500,icon:'📚'},
-    {id:'ach_col200',title:'Archiviste Suprême',desc:'Posséder 200 cartes distinctes dans ton inventaire',cur:distinct,goal:200,rew:1500,icon:'🏛️'},
-    {id:'ach_grade5',title:'Expert Certifié',desc:'Faire grader ou posséder au moins 5 cartes gradées PSA',cur:totalGraded,goal:5,rew:250,icon:'🔎'},
-    {id:'ach_psa10',title:'Chasseur de Gem Mint',desc:'Obtenir une carte certifiée note PSA 10',cur:psa10,goal:1,rew:1000,icon:'💎'},
-    {id:'ach_rich',title:'Magnat des Affaires',desc:'Cumuler 5 000 AnimeCoins gagnés au total',cur:u.earned||0,goal:5000,rew:600,icon:'🪙'}
-  ];
-  return defs.map(d=>({
-    ...d,
-    done:d.cur>=d.goal,
-    claimed:claimed.includes(d.id),
-    pct:Math.min(100,Math.round((d.cur/d.goal)*100))
-  }));
+    {id:'ach_god',title:'Élu des Dieux',desc:'Obtenir une carte Légendaire ou Mythique',cur:hasLM?1:0,goal:1,rew:300,icon:'🌟'},
+    {id:'ach_col50',title:'Collectionneur Aguerri',desc:'Posséder 50 cartes distinctes',cur:distinct,goal:50,rew:500,icon:'📚'},
+    {id:'ach_col200',title:'Archiviste Suprême',desc:'Posséder 200 cartes distinctes',cur:distinct,goal:200,rew:1500,icon:'🏛️'},
+    {id:'ach_grade5',title:'Expert Certifié',desc:'Faire grader ou posséder 5 cartes gradées PSA',cur:tg,goal:5,rew:250,icon:'🔎'},
+    {id:'ach_psa10',title:'Chasseur de Gem Mint',desc:'Obtenir une carte PSA 10',cur:p10,goal:1,rew:1000,icon:'💎'},
+    {id:'ach_rich',title:'Magnat des Affaires',desc:'Cumuler 5 000 AnimeCoins gagnés',cur:u.earned||0,goal:5000,rew:600,icon:'🪙'}
+  ].map(d=>({...d,done:d.cur>=d.goal,claimed:claimed.includes(d.id),pct:Math.min(100,Math.round(d.cur/d.goal*100))}));
 }
-
 function vAch(){
-  const list=getAchList();
-  const doneCount=list.filter(x=>x.claimed).length;
-  return `<div class="space-y-4">
-    <div class="glass p-4 flex items-center justify-between flex-wrap gap-2">
-      <div>
-        <h2 class="font-bold text-lg text-white">🏆 Succès & Trophées</h2>
-        <p class="text-xs text-slate-400">Accomplis des objectifs de collection pour remporter des AnimeCoins</p>
-      </div>
-      <div class="px-3 py-1.5 rounded-lg bg-white/5 text-sm font-semibold text-indigo-300">
-        Complétés : ${doneCount} / ${list.length}
-      </div>
-    </div>
-    <div class="grid sm:grid-cols-2 gap-3">
-      ${list.map(a=>`<div class="glass p-4 flex items-start gap-3.5 border ${a.done&&!a.claimed?'border-amber-400/50 bg-amber-500/[0.04]':'border-white/10'}">
-        <div class="w-11 h-11 rounded-xl bg-white/5 flex items-center justify-center text-2xl shrink-0">${a.icon}</div>
-        <div class="flex-1 min-w-0 space-y-1.5">
-          <div class="flex items-center justify-between gap-2">
-            <h3 class="font-bold text-sm text-white truncate">${a.title}</h3>
-            <span class="text-xs font-bold text-amber-300 shrink-0">+${a.rew} AC</span>
-          </div>
-          <p class="text-xs text-slate-400">${a.desc}</p>
-          <div class="flex items-center gap-2 pt-1">
-            <div class="flex-1 h-2 bg-white/10 rounded-full overflow-hidden">
-              <div class="h-2 ${a.claimed?'bg-emerald-500':a.done?'bg-amber-400':'bg-indigo-500'}" style="width:${a.pct}%"></div>
-            </div>
-            <span class="text-[11px] text-slate-400 shrink-0">${Math.min(a.cur,a.goal).toLocaleString()} / ${a.goal.toLocaleString()}</span>
-          </div>
-          <div class="pt-1">
-            ${a.claimed
-              ?`<span class="inline-block text-[11px] font-semibold text-emerald-400">✓ Récompense réclamée</span>`
-              :a.done
-                ?`<button class="btn text-xs py-1 px-3" data-a="claimAch" data-p="${a.id}">🎁 Réclamer +${a.rew} AC</button>`
-                :`<span class="inline-block text-[11px] text-slate-500">🔒 En cours (${a.pct}%)</span>`}
-          </div>
-        </div>
-      </div>`).join('')}
-    </div>
-  </div>`;
+  const list=getAchList(),dc=list.filter(x=>x.claimed).length;
+  return `<div class="space-y-4"><div class="glass p-4 flex items-center justify-between flex-wrap gap-2"><div><h2 class="font-bold text-lg text-white">Succès & Trophées</h2><p class="text-xs text-slate-400">Accomplis des objectifs pour remporter des AnimeCoins</p></div><div class="px-3 py-1.5 rounded-lg bg-white/5 text-sm font-semibold text-indigo-300">Complétés : ${dc} / ${list.length}</div></div>
+  <div class="grid sm:grid-cols-2 gap-3">${list.map(a=>`<div class="glass p-4 flex items-start gap-3.5 border ${a.done&&!a.claimed?'border-amber-400/50 bg-amber-500/[0.04]':'border-white/10'}"><div class="w-11 h-11 rounded-xl bg-white/5 flex items-center justify-center text-2xl shrink-0">${a.icon}</div>
+  <div class="flex-1 min-w-0 space-y-1.5"><div class="flex items-center justify-between gap-2"><h3 class="font-bold text-sm text-white truncate">${a.title}</h3><span class="text-xs font-bold text-amber-300 shrink-0">+${a.rew} AC</span></div><p class="text-xs text-slate-400">${a.desc}</p>
+  <div class="flex items-center gap-2 pt-1"><div class="flex-1 h-2 bg-white/10 rounded-full overflow-hidden"><div class="h-2 ${a.claimed?'bg-emerald-500':a.done?'bg-amber-400':'bg-indigo-500'}" style="width:${a.pct}%"></div></div><span class="text-[11px] text-slate-400 shrink-0">${Math.min(a.cur,a.goal).toLocaleString()} / ${a.goal.toLocaleString()}</span></div>
+  <div class="pt-1">${a.claimed?'<span class="text-[11px] font-semibold text-emerald-400">✓ Récompense réclamée</span>':a.done?`<button class="btn text-xs py-1 px-3" data-a="claimAch" data-p="${a.id}">Réclamer +${a.rew} AC</button>`:`<span class="text-[11px] text-slate-500">En cours (${a.pct}%)</span>`}</div></div></div>`).join('')}</div></div>`;
 }
+A.claimAch=async id=>{const a=getAchList().find(x=>x.id===id);if(!a||!a.done||a.claimed)return;await saveU({ac:(U().ac||0)+a.rew,earned:(U().earned||0)+a.rew,ach:arrayUnion(id)});toast(`Succès « ${a.title} » débloqué : +${a.rew} AC !`)};
 
-A.claimAch=async id=>{
-  const a=getAchList().find(x=>x.id===id);
-  if(!a||!a.done||a.claimed)return;
-  await saveU({
-    ac:(U().ac||0)+a.rew,
-    earned:(U().earned||0)+a.rew,
-    ach:arrayUnion(id)
-  });
-  toast(`🏆 Succès "${a.title}" débloqué : +${a.rew} AC !`);
-};
-
-/* ============ 15. PROFIL : AVATAR DEPUIS UNE CARTE POSSÉDÉE & PARAMÈTRES ÉPURÉS ============ */
-const BN=[
-  ['Ardoise','linear-gradient(90deg,#1e293b,#0f172a)'],
-  ['Indigo','linear-gradient(90deg,#312e81,#1e1b4b)'],
-  ['Émeraude','linear-gradient(90deg,#064e3b,#022c22)'],
-  ['Bordeaux','linear-gradient(90deg,#581c2e,#2a0f18)']
-];
+/* ============ 16. PROFIL ============ */
+const BN=[['Ardoise','linear-gradient(90deg,#1e293b,#0f172a)'],['Indigo','linear-gradient(90deg,#312e81,#1e1b4b)'],['Émeraude','linear-gradient(90deg,#064e3b,#022c22)'],['Bordeaux','linear-gradient(90deg,#581c2e,#2a0f18)']];
 const TI=['Recrue','Collectionneur','Chasseur de Mythiques','Maître des enchères','Gem Mint Hunter','Légende'];
 const AV=['🦊','🐉','🥷','👾','🌸','⚡','🐺','🎴'];
-
 function vProf(){
-  const u=U(),st=stacks(u.inv),m=u.master&&u.inv?.[u.master]?u.master:'';
-  const g10=st.filter(s=>s.g===10).reduce((a,s)=>a+s.n,0);
-  const ownedIds=Object.keys(u.inv||{}).filter(id=>!S.avQ||cd(id).name.toLowerCase().includes(S.avQ.toLowerCase()));
-
-  return `<div class="space-y-4">
-    <div class="rounded-2xl p-4 sm:p-5 flex items-center gap-4 border border-white/10" style="background:${BN[u.banner||0][1]}">
-      ${avatarHTML(u,'w-16 h-16 text-3xl')}
-      <div class="min-w-0">
-        <h2 class="text-xl sm:text-2xl font-extrabold text-white truncate">${E(u.name)}</h2>
-        <p class="text-xs sm:text-sm text-slate-300">${E(u.title)} — ${E(u.bio)}</p>
-      </div>
-    </div>
-
-    <div class="grid md:grid-cols-2 gap-4">
-      <div class="glass p-4 space-y-3 text-sm">
-        <h3 class="font-bold text-white">🎨 Personnalisation du Profil</h3>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          <div>
-            <label class="block text-xs text-slate-400 mb-1">Pseudo</label>
-            <input class="w-full" value="${E(u.name)}" data-c="pName">
-          </div>
-          <div>
-            <label class="block text-xs text-slate-400 mb-1">Titre</label>
-            <select class="w-full" data-c="pTitle">${TI.map(t=>`<option ${u.title===t?'selected':''}>${t}</option>`).join('')}</select>
-          </div>
-        </div>
-        <div>
-          <label class="block text-xs text-slate-400 mb-1">Biographie</label>
-          <input class="w-full" value="${E(u.bio)}" data-c="pBio">
-        </div>
-        <div>
-          <label class="block text-xs text-slate-400 mb-1">Bannière de profil</label>
-          <select class="w-full" data-c="pBan">${BN.map((b,i)=>`<option value="${i}" ${(u.banner||0)===i?'selected':''}>Bannière ${b[0]}</option>`).join('')}</select>
-        </div>
-
-        <div class="pt-2 border-t border-white/10 space-y-2">
-          <label class="block text-xs font-semibold text-indigo-300">🖼️ Photo de profil : Choisir une carte possédée</label>
-          <select class="w-full" data-c="pAvCard">
-            <option value="">— Utiliser un émoji classique —</option>
-            ${ownedIds.map(id=>`<option value="${id}" ${u.avCard===id?'selected':''}>${E(cd(id).name)} (${R[cd(id).rar].n})</option>`).join('')}
-          </select>
-          <div class="flex gap-1.5 flex-wrap items-center">
-            <span class="text-xs text-slate-400 mr-1">Ou émoji :</span>
-            ${AV.map(a=>`<button class="btn2 text-sm px-2 py-1" data-a="pAv" data-p="${a}">${a}</button>`).join('')}
-          </div>
-        </div>
-
-        <div class="pt-2 border-t border-white/10 space-y-2">
-          <label class="block text-xs text-slate-400">⭐ Carte maîtresse exposée</label>
-          <select class="w-full" data-c="pMaster">
-            <option value="">— Aucune —</option>
-            ${Object.keys(u.inv||{}).map(id=>`<option value="${id}" ${m===id?'selected':''}>${E(cd(id).name)} (${R[cd(id).rar].n})</option>`).join('')}
-          </select>
-          ${m?`<div class="w-36 pt-1">${card(cd(m))}</div>`:''}
-        </div>
-      </div>
-
-      <div class="glass p-4 space-y-3 text-sm h-fit">
-        <h3 class="font-bold text-white">📈 Statistiques du Joueur</h3>
-        <div class="stats text-xs sm:text-sm">
-          <p><span>Boosters ouverts</span><b>${(u.opened||0).toLocaleString()}</b></p>
-          <p><span>Cartes possédées (total)</span><b>${st.reduce((a,s)=>a+s.n,0).toLocaleString()}</b></p>
-          <p><span>Cartes distinctes</span><b>${Object.keys(u.inv||{}).length.toLocaleString()}</b></p>
-          <p><span>Valeur de la collection</span><b class="text-amber-300">${invVal(u.inv).toLocaleString()} AC</b></p>
-          <p><span>AnimeCoins gagnés (cumul)</span><b>${(u.earned||0).toLocaleString()} AC</b></p>
-          <p><span>Cartes certifiées PSA 10</span><b class="text-indigo-300">${g10}</b></p>
-          <p><span>Succès débloqués</span><b>${(u.ach||[]).length} / 8</b></p>
-          <p><span>Wishlist · Amis</span><b>${(u.wish||[]).length} · ${(u.friends||[]).length}</b></p>
-        </div>
-
-        <h3 class="font-bold text-white pt-3">⚙️ Paramètres du Compte</h3>
-        <label class="flex gap-2 items-center text-xs cursor-pointer p-2 rounded bg-white/5">
-          <input type="checkbox" ${u.nsfw?'checked':''} data-c="pNsfw"> Afficher le contenu 18+ / NSFW (isAdult)
-        </label>
-        <div class="pt-2">
-          <button class="btn2 w-full text-rose-300 border-rose-500/30 hover:bg-rose-500/10" data-a="logout">Déconnexion du compte</button>
-        </div>
-      </div>
-    </div>
-  </div>`;
+  const u=U(),st=stacks(u.inv),m=u.master&&u.inv?.[u.master]?u.master:'',g10=st.filter(s=>s.g===10).reduce((a,s)=>a+s.n,0),owned=Object.keys(u.inv||{}),muted=localStorage.ac_mute==='1';
+  return `<div class="space-y-4"><div class="rounded-2xl p-4 sm:p-5 flex items-center gap-4 border border-white/10" style="background:${BN[u.banner||0][1]}">${avatarHTML(u,'w-16 h-16 text-3xl')}<div class="min-w-0"><h2 class="text-lg sm:text-xl font-extrabold text-white truncate">${E(u.name)}</h2><p class="text-xs sm:text-sm text-slate-300">${E(u.title)} — ${E(u.bio)}</p></div></div>
+  <div class="grid md:grid-cols-2 gap-4"><div class="glass p-4 space-y-3 text-sm"><h3 class="font-bold text-white">Personnalisation</h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2"><div><label class="block text-xs text-slate-400 mb-1">Pseudo</label><input class="w-full" value="${E(u.name)}" data-c="pName"></div><div><label class="block text-xs text-slate-400 mb-1">Titre</label><select class="w-full" data-c="pTitle">${TI.map(t=>`<option ${u.title===t?'selected':''}>${t}</option>`).join('')}</select></div></div>
+    <div><label class="block text-xs text-slate-400 mb-1">Biographie</label><input class="w-full" value="${E(u.bio)}" data-c="pBio"></div>
+    <div><label class="block text-xs text-slate-400 mb-1">Bannière</label><select class="w-full" data-c="pBan">${BN.map((b,i)=>`<option value="${i}" ${(u.banner||0)===i?'selected':''}>Bannière ${b[0]}</option>`).join('')}</select></div>
+    <div class="pt-2 border-t border-white/10 space-y-2"><label class="block text-xs font-semibold text-indigo-300">Photo de profil : choisir une carte possédée</label>
+    <select class="w-full" data-c="pAvCard"><option value="">— Émoji classique —</option>${owned.map(id=>`<option value="${id}" ${u.avCard===id?'selected':''}>${E(cd(id).name)} (${R[cd(id).rar].n})</option>`).join('')}</select>
+    <div class="flex gap-1.5 flex-wrap items-center"><span class="text-xs text-slate-400 mr-1">Ou émoji :</span>${AV.map(a=>`<button class="btn2 text-sm px-2 py-1" data-a="pAv" data-p="${a}">${a}</button>`).join('')}</div></div>
+    <div class="pt-2 border-t border-white/10 space-y-2"><label class="block text-xs text-slate-400">Carte maîtresse exposée</label><select class="w-full" data-c="pMaster"><option value="">— Aucune —</option>${owned.map(id=>`<option value="${id}" ${m===id?'selected':''}>${E(cd(id).name)} (${R[cd(id).rar].n})</option>`).join('')}</select>${m?`<div class="w-36 pt-1">${card(cd(m))}</div>`:''}</div></div>
+  <div class="glass p-4 space-y-3 text-sm h-fit"><h3 class="font-bold text-white">Statistiques</h3><div class="stats text-xs sm:text-sm">
+    <p><span>Boosters ouverts</span><b>${(u.opened||0).toLocaleString()}</b></p><p><span>Cartes possédées (total)</span><b>${st.reduce((a,s)=>a+s.n,0).toLocaleString()}</b></p><p><span>Cartes distinctes</span><b>${owned.length.toLocaleString()}</b></p>
+    <p><span>Valeur de revente de la collection</span><b class="text-amber-300">${invVal(u.inv).toLocaleString()} AC</b></p><p><span>AnimeCoins gagnés (cumul)</span><b>${(u.earned||0).toLocaleString()} AC</b></p><p><span>Cartes PSA 10</span><b class="text-indigo-300">${g10}</b></p>
+    <p><span>Succès débloqués</span><b>${(u.ach||[]).length} / 8</b></p><p><span>Wishlist · Amis</span><b>${(u.wish||[]).length} · ${(u.friends||[]).length}</b></p></div>
+    <h3 class="font-bold text-white pt-3">Paramètres</h3>
+    <label class="flex gap-2 items-center text-xs cursor-pointer p-2 rounded bg-white/5"><input type="checkbox" ${u.nsfw?'checked':''} data-c="pNsfw"> Afficher le contenu 18+ / NSFW</label>
+    <label class="flex gap-2 items-center text-xs cursor-pointer p-2 rounded bg-white/5"><input type="checkbox" ${muted?'':'checked'} data-c="pSound"> Effets sonores</label>
+    <div class="flex gap-2 flex-wrap pt-2"><button class="btn2" data-a="exp">Exporter (JSON)</button><button class="btn2" data-a="clearCache">Vider le cache catalogue</button><button class="btn2 text-rose-300 border-rose-500/30" data-a="logout">Déconnexion</button></div></div></div></div>`;
 }
-
 A.pName=v=>{v=v.trim();if(v.length>=3)saveU({name:v,nameL:v.toLowerCase()})};
-A.pBio=v=>saveU({bio:v});
-A.pTitle=v=>saveU({title:v});
-A.pAv=v=>saveU({av:v,avImg:'',avCard:''});
-A.pAvCard=id=>{
-  if(!id)return saveU({avImg:'',avCard:''});
-  const c=cd(id);
-  saveU({avImg:c.img||'',avCard:id});
-  toast('Photo de profil mise à jour !');
-};
-A.pBan=v=>saveU({banner:+v});
-A.pMaster=v=>saveU({master:v});
+A.pBio=v=>saveU({bio:v});A.pTitle=v=>saveU({title:v});A.pAv=v=>saveU({av:v,avImg:'',avCard:''});
+A.pAvCard=id=>{if(!id)return saveU({avImg:'',avCard:''});saveU({avImg:cd(id).img||'',avCard:id});toast('Photo de profil mise à jour !')};
+A.pBan=v=>saveU({banner:+v});A.pMaster=v=>saveU({master:v});
+A.pSound=(v,el)=>{localStorage.ac_mute=el.checked?'0':'1';if(el.checked)AU.flip()};
+A.exp=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(U(),null,1)],{type:'application/json'}));a.download='animecards-save.json';a.click()};
+A.clearCache=async()=>{if(confirm('Vider le cache du catalogue ? Il sera rechargé au prochain démarrage.')){await idbClear();location.reload()}};
 A.pNsfw=async(v,el)=>{
   await saveU({nsfw:el.checked});
   if(el.checked&&!POOL.some(p=>p.adult)){
     toast('Chargement du catalogue 18+ en arrière-plan…');
     try{
-      let all=await idbAll();
-      for(const j of ADJ){
-        const rows=await fetchJob(j);
-        all.push(...rows);
-        await idbPut(rows);
-        await sleep(1200);
-      }
-      rarify(all);
-      reg(all);
-      toast('Contenu 18+ activé');
+      for(const j of ADJ){const rows=await fetchJob(j);rows.forEach(r=>BGMAP.set(r.id,r));await idbPut(rows);await sleep(1200)}
+      refresh();toast('Contenu 18+ activé');
     }catch(e){fail(e)}
   }
 };
